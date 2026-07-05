@@ -100,3 +100,23 @@ export const AgentProfileSchema = z.object({
   }),
 });
 export type AgentProfile = z.infer<typeof AgentProfileSchema>;
+
+/**
+ * A drafted writer output: one message plus the facts it claims to use.
+ * Lives here (not in writer.ts) so that writer-guardrail.ts — a pure,
+ * network-free module reused by the ui/ pipeline simulator — never has to
+ * type-resolve writer.ts, which imports llm.ts, which imports the `openai`
+ * package. Moving the type is a no-op for runtime behavior; writer.ts
+ * re-exports it so existing imports of `WriterOutput` from writer.ts keep
+ * working unchanged.
+ */
+export const WriterOutputSchema = z.object({
+  message: z.string(),
+  // Lenient at the boundary, same pattern as areas above: some models omit
+  // this or return null instead of [].
+  factsUsed: z
+    .array(z.string())
+    .nullable()
+    .transform((v) => v ?? []),
+});
+export type WriterOutput = z.infer<typeof WriterOutputSchema>;

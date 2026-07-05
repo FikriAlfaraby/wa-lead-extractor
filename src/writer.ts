@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { AgentProfile, LeadProfile } from "./schema.js";
+import { WriterOutputSchema, type AgentProfile, type LeadProfile, type WriterOutput } from "./schema.js";
 import type { LeadState } from "./classify.js";
 import { callLlmJson, type LlmConfig } from "./llm.js";
 
@@ -11,16 +11,10 @@ import { callLlmJson, type LlmConfig } from "./llm.js";
  * validation" pattern as extract.ts -> guardrail.ts.
  */
 
-const WriterOutputSchema = z.object({
-  message: z.string(),
-  // Lenient at the boundary, same pattern as schema.ts's areas field: some
-  // models omit this or return null instead of [].
-  factsUsed: z
-    .array(z.string())
-    .nullable()
-    .transform((v) => v ?? []),
-});
-export type WriterOutput = z.infer<typeof WriterOutputSchema>;
+// WriterOutputSchema/WriterOutput now live in schema.ts (writer-guardrail.ts
+// needs the type without pulling in this file's llm.ts/openai dependency);
+// re-exported here so existing `from "./writer.js"` imports keep working.
+export type { WriterOutput };
 
 export interface WriterInput {
   profile: LeadProfile;
