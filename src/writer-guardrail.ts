@@ -1,5 +1,10 @@
-import type { AgentProfile, LeadProfile } from "./schema.js";
-import type { WriterOutput } from "./writer.js";
+import type { AgentProfile, LeadProfile, WriterOutput } from "./schema.js";
+import {
+  normalizeIndonesianNumber,
+  JUTA_MULTIPLIER,
+  MILIAR_MULTIPLIER,
+  MONEY_UNIT_MULTIPLIERS,
+} from "./deterministic.js";
 
 /**
  * Verifies a drafted message before it's allowed anywhere near a "send"
@@ -31,6 +36,7 @@ const MIN_FLAGGED_NUMBER = 10;
 // proper location entity extraction to cover areas outside this list.
 const KNOWN_AREA_TERMS = [
   "BSD",
+  "Tampines", // used by the SG-voice demo scenarios (ui/src/scenarios.ts)
   "Jaksel",
   "Kemang",
   "Alam Sutera",
@@ -54,15 +60,65 @@ function isCloseToAny(value: number, allowed: number[]): boolean {
   return allowed.some((a) => Math.abs(a - value) < 0.05);
 }
 
+// Drafts mix Indonesian money slang (jt/juta/M/miliar/milyar — the exact
+// convention deterministic.ts uses for the lead's own messages) with
+// spelled-out English, since agents write bilingually. Extend the shared
+// Indonesian unit map with the English equivalents rather than
+// re-declaring the jt/juta/M/miliar/milyar convention here.
+const WRITER_MONEY_UNIT_MULTIPLIERS: Record<string, number> = {
+  ...MONEY_UNIT_MULTIPLIERS,
+  million: JUTA_MULTIPLIER,
+  billion: MILIAR_MULTIPLIER,
+};
+
+const MONEY_UNIT_PATTERN = Object.keys(WRITER_MONEY_UNIT_MULTIPLIERS).join("|");
+
+/**
+ * Matches any number in a drafted message, capturing an optional trailing
+ * money unit. The number itself may use Indonesian-style separators — see
+ * normalizeIndonesianNumber (deterministic.ts) for the thousands-vs-decimal
+ * disambiguation rule shared with lead-side extraction.
+ */
+const NUMBER_TOKEN_REGEX = new RegExp(`(\\d+(?:[.,]\\d+)*)\\s*(${MONEY_UNIT_PATTERN})?\\b`, "gi");
+
+// ponytail: 1% relative tolerance absorbs float drift from multiplying by
+// 1e6/1e9 and honest rounding in how an agent phrases the budget back
+// ("Rp1,5M" for an exact 1,500,000,000 profile). Tighten if false
+// negatives show up in practice.
+const MONEY_RELATIVE_TOLERANCE = 0.01;
+
+function isCloseToIDR(value: number, target: number): boolean {
+  if (target === 0) return value === 0;
+  return Math.abs(value - target) / target < MONEY_RELATIVE_TOLERANCE;
+}
+
 function findInventedNumbers(message: string, profile: LeadProfile): string[] {
   const allowed = allowedBudgetNumbers(profile);
-  const matches = message.match(/\d[\d,]*(?:\.\d+)?/g) ?? [];
   const violations: string[] = [];
-  for (const raw of matches) {
-    const value = parseFloat(raw.replace(/,/g, ""));
-    if (Number.isNaN(value) || value < MIN_FLAGGED_NUMBER) continue;
-    if (!isCloseToAny(value, allowed)) {
-      violations.push(`number "${raw}" not grounded in the lead profile`);
+  for (const match of message.matchAll(NUMBER_TOKEN_REGEX)) {
+    const [full, numberText, unitText] = match;
+    const normalized = normalizeIndonesianNumber(numberText);
+    if (Number.isNaN(normalized)) continue;
+
+    if (unitText) {
+      // Unit is explicit (jt/M/miliar/million/...) — resolve to an actual
+      // IDR amount and compare directly against the profile's budget,
+      // regardless of how small the written number is ("1,5M" is real
+      // money even though 1.5 alone would look incidental).
+      const multiplier = WRITER_MONEY_UNIT_MULTIPLIERS[unitText.toLowerCase()];
+      const idrValue = normalized * multiplier;
+      if (profile.budgetIDR === null || !isCloseToIDR(idrValue, profile.budgetIDR)) {
+        violations.push(`number "${full.trim()}" not grounded in the lead profile`);
+      }
+      continue;
+    }
+
+    // No unit: could be a bare IDR figure ("1.500.000.000"), a bare
+    // juta/miliar magnitude ("900" meaning 900 million), or an incidental
+    // count ("2 units") — fall back to the coarser ratio comparison.
+    if (normalized < MIN_FLAGGED_NUMBER) continue;
+    if (!isCloseToAny(normalized, allowed)) {
+      violations.push(`number "${numberText}" not grounded in the lead profile`);
     }
   }
   return violations;

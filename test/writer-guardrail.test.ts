@@ -83,3 +83,40 @@ describe("verifyDraft", () => {
     expect(verdict.passed).toBe(true);
   });
 });
+
+describe("verifyDraft — Indonesian comma-decimal money grounding", () => {
+  const INDO_PROFILE: LeadProfile = {
+    ...EMPTY_LEAD_PROFILE,
+    budgetIDR: 1_500_000_000,
+    areas: ["BSD"],
+    intent: "buy",
+  };
+
+  it("grounds 'Rp1,5M' against a 1.5 miliar budget (comma as decimal, M as miliar)", () => {
+    const draft: WriterOutput = {
+      message: "Unit di BSD sesuai budget Rp1,5M sudah saya siapkan.",
+      factsUsed: ["areas: BSD", "budget: 1500000000 IDR"],
+    };
+    const verdict = verifyDraft(draft, INDO_PROFILE, AGENT);
+    expect(verdict).toEqual({ passed: true, violations: [] });
+  });
+
+  it("flags 'harganya cuma 2,3M' as ungrounded against a 1.5 miliar budget", () => {
+    const draft: WriterOutput = {
+      message: "harganya cuma 2,3M",
+      factsUsed: [],
+    };
+    const verdict = verifyDraft(draft, INDO_PROFILE, AGENT);
+    expect(verdict.passed).toBe(false);
+    expect(verdict.violations.some((v) => v.includes("not grounded"))).toBe(true);
+  });
+
+  it("grounds a bare dot-thousands amount 'totalnya 1.500.000.000 rupiah'", () => {
+    const draft: WriterOutput = {
+      message: "totalnya 1.500.000.000 rupiah",
+      factsUsed: ["budget: 1500000000 IDR"],
+    };
+    const verdict = verifyDraft(draft, INDO_PROFILE, AGENT);
+    expect(verdict).toEqual({ passed: true, violations: [] });
+  });
+});

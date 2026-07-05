@@ -24,8 +24,47 @@ export interface DeterministicResult {
   urgencyCitation: string | null;
 }
 
-const JUTA_MULTIPLIER = 1_000_000;
-const MILIAR_MULTIPLIER = 1_000_000_000;
+export const JUTA_MULTIPLIER = 1_000_000;
+export const MILIAR_MULTIPLIER = 1_000_000_000;
+
+/**
+ * Shared jt/juta/M/miliar/milyar convention, exported so any other module
+ * that needs to resolve a money UNIT to a multiplier (e.g. the writer
+ * guardrail's grounding check) uses the exact same mapping instead of
+ * re-declaring it.
+ */
+export const MONEY_UNIT_MULTIPLIERS: Record<string, number> = {
+  jt: JUTA_MULTIPLIER,
+  juta: JUTA_MULTIPLIER,
+  m: MILIAR_MULTIPLIER,
+  miliar: MILIAR_MULTIPLIER,
+  milyar: MILIAR_MULTIPLIER,
+};
+
+/**
+ * Resolves the thousands-vs-decimal ambiguity in Indonesian-formatted
+ * numbers, where BOTH "." and "," can be either separator depending on
+ * context (unlike English, which fixes "," = thousands, "." = decimal).
+ *
+ * Rule: look at the LAST separator in the string.
+ *   - exactly 3 digits after it -> thousands separator
+ *     ("1.500.000.000" -> 1500000000, "1.500" alone -> 1500)
+ *   - 1 or 2 digits after it    -> decimal separator
+ *     ("1,5" -> 1.5, "2.3" -> 2.3)
+ * Any earlier separators are always thousands groupings and are stripped.
+ */
+export function normalizeIndonesianNumber(raw: string): number {
+  const trimmed = raw.trim();
+  const lastSepIndex = Math.max(trimmed.lastIndexOf("."), trimmed.lastIndexOf(","));
+  if (lastSepIndex === -1) return parseFloat(trimmed);
+
+  const digitsAfter = trimmed.length - lastSepIndex - 1;
+  const integerPart = trimmed.slice(0, lastSepIndex).replace(/[.,]/g, "");
+  const fractionPart = trimmed.slice(lastSepIndex + 1);
+
+  if (digitsAfter === 3) return parseFloat(integerPart + fractionPart);
+  return parseFloat(`${integerPart}.${fractionPart}`);
+}
 
 /**
  * Matches Indonesian WA-slang money amounts said BY THE LEAD, e.g.:
@@ -46,13 +85,11 @@ export function parseMoneyToIDR(
   const match = text.match(MONEY_REGEX);
   if (!match) return null;
 
-  const numberPart = match[1].replace(",", ".");
+  const base = normalizeIndonesianNumber(match[1]);
   const unit = match[2].toLowerCase();
-  const base = parseFloat(numberPart);
   if (Number.isNaN(base)) return null;
 
-  const multiplier =
-    unit === "jt" || unit === "juta" ? JUTA_MULTIPLIER : MILIAR_MULTIPLIER;
+  const multiplier = MONEY_UNIT_MULTIPLIERS[unit];
 
   return {
     amount: Math.round(base * multiplier),
