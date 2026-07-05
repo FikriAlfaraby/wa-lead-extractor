@@ -1,0 +1,15 @@
+{
+  // Live demo: static UI (Workers Assets) + real pipeline API in one Worker.
+  // Deploy: npm run build --prefix ui && npx wrangler deploy
+  // Secrets: npx wrangler secret put LLM_API_KEY (plus optional vars
+  //          LLM_BASE_URL / LLM_MODEL for OpenAI-compatible gateways).
+  "name": "wa-lead-extractor",
+  "main": "server/index.ts",
+  "compatibility_date": "2025-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "ui/dist",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  }
+}
