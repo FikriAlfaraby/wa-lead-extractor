@@ -1,0 +1,74 @@
+[
+  {
+    "id": "lead_c01",
+    "name": "Andi Wijaya",
+    "leadState": "warm",
+    "qualificationState": "handed_off",
+    "qualificationReason": "qualified (budget, intent, area present) with high urgency — handed off to agent",
+    "profileSummary": "Buy · BSD · Rp 1.5B · high urgency · rumah, closing bulan ini",
+    "agentName": "Budi Santoso",
+    "draftMessage": "Halo Pak Andi, masih semangat cari rumah di BSD ya? Unit yang sesuai budget 1.5M udah saya siapin, kapan bisa survey minggu ini? Salam, Budi",
+    "guardrail": { "passed": true, "violations": [] }
+  },
+  {
+    "id": "lead_c02",
+    "name": "Sarah Lim",
+    "leadState": "cold",
+    "qualificationState": "qualified",
+    "qualificationReason": "budget, intent, and at least one area are all present",
+    "profileSummary": "Rent · Jaksel · Rp 15jt/bulan · apartemen studio",
+    "agentName": "Amelia Tan",
+    "draftMessage": "Hi Sarah, it's been a little while — still looking for a studio near an MRT in Jaksel? Happy to send a few fresh options if you're still keen. Best, Amelia",
+    "guardrail": { "passed": true, "violations": [] }
+  },
+  {
+    "id": "lead_c03",
+    "name": "Jonathan Ng",
+    "leadState": "warm",
+    "qualificationState": "qualified",
+    "qualificationReason": "budget, intent, and at least one area are all present",
+    "profileSummary": "Buy · District 9/10, Singapore · Rp 2B · condo, tahun depan",
+    "agentName": "Amelia Tan",
+    "draftMessage": "Hi Jonathan! A District 9 condo just came up that could suit your budget of 2 billion — great investment potential. New units in District 15 also just opened at a lower entry price 🎉. Want the details? Best, Amelia",
+    "guardrail": {
+      "passed": false,
+      "violations": [
+        "area \"District 15\" not present in the lead profile",
+        "message has 3 sentences, exceeds agent max of 4"
+      ]
+    }
+  },
+  {
+    "id": "lead_c05",
+    "name": "Devi Kusuma",
+    "leadState": "cold",
+    "qualificationState": "qualifying",
+    "qualificationReason": "still missing budget, intent, or area for the qualified bar",
+    "profileSummary": "Buy · Kemang · Rp 900jt · apartemen (no urgency stated)",
+    "agentName": "Budi Santoso",
+    "draftMessage": "Halo Kak Devi, dulu sempat lihat apartemen Kemang dengan budget 900jt. Masih dicari-cari, atau ada info tambahan yang bisa saya bantu? Salam, Budi",
+    "guardrail": { "passed": true, "violations": [] }
+  },
+  {
+    "id": "lead_c09",
+    "name": "Fajar Ramadhan",
+    "leadState": "new",
+    "qualificationState": "new",
+    "qualificationReason": "no lead facts extracted yet",
+    "profileSummary": "No facts extracted yet — small talk only",
+    "agentName": "Budi Santoso",
+    "draftMessage": "Halo Kak Fajar, makasih udah mampir tanya-tanya kemarin. Ada tipe properti atau area tertentu yang lagi dicari? Salam, Budi",
+    "guardrail": { "passed": true, "violations": [] }
+  },
+  {
+    "id": "lead_c12",
+    "name": "Teguh Prasetyo",
+    "leadState": "cold",
+    "qualificationState": "disqualified",
+    "qualificationReason": "lead explicitly said stop/not interested",
+    "profileSummary": "No confirmed facts — mentioned a friend's budget, not their own; later opted out",
+    "agentName": "Budi Santoso",
+    "draftMessage": "Halo Kak Teguh, baik, saya stop follow-up untuk saat ini ya. Kalau nanti berubah pikiran, kabari saya kapan saja. Salam, Budi",
+    "guardrail": { "passed": true, "violations": [] }
+  }
+]

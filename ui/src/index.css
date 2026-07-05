@@ -1,0 +1,71 @@
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --border: #e2e4e9;
+  --text: #1c1f26;
+  --text-muted: #5b616e;
+  --accent: #3d4de0;
+  --accent-soft: rgba(61, 77, 224, 0.1);
+
+  --state-new: #2563eb;
+  --state-new-bg: rgba(37, 99, 235, 0.1);
+  --state-warm: #b45309;
+  --state-warm-bg: rgba(217, 119, 6, 0.12);
+  --state-cold: #475569;
+  --state-cold-bg: rgba(71, 85, 105, 0.1);
+
+  --qual-qualified: #15803d;
+  --qual-qualified-bg: rgba(21, 128, 61, 0.1);
+  --qual-disqualified: #b91c1c;
+  --qual-disqualified-bg: rgba(185, 28, 28, 0.1);
+  --qual-handed-off: #7e22ce;
+  --qual-handed-off-bg: rgba(126, 34, 206, 0.1);
+  --qual-neutral: #475569;
+  --qual-neutral-bg: rgba(71, 85, 105, 0.1);
+
+  --guardrail-pass: #15803d;
+  --guardrail-fail: #b91c1c;
+  --guardrail-fail-bg: #fef2f2;
+
+  color-scheme: light dark;
+  font: 15px/1.5 -apple-system, "Inter", "Segoe UI", Roboto, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161c;
+    --surface: #1c1f27;
+    --border: #2c303a;
+    --text: #e7e9ee;
+    --text-muted: #9aa0ac;
+    --accent: #818cf8;
+    --accent-soft: rgba(129, 140, 248, 0.15);
+
+    --guardrail-fail-bg: rgba(185, 28, 28, 0.12);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  color: var(--text);
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+}
