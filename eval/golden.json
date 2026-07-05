@@ -1,0 +1,98 @@
+{
+  "c01_bsd_buy_urgent": {
+    "budgetIDR": 1500000000,
+    "areas": ["BSD"],
+    "intent": "buy",
+    "urgency": "high",
+    "propertyType": "rumah",
+    "timeline": "bulan ini"
+  },
+  "c02_jaksel_rent_medium": {
+    "budgetIDR": 15000000,
+    "areas": ["Jaksel"],
+    "intent": "rent",
+    "urgency": "unknown",
+    "propertyType": "apartemen studio",
+    "timeline": null
+  },
+  "c03_sg_buy_condo_lowurgency": {
+    "budgetIDR": 2000000000,
+    "areas": ["District 9", "District 10"],
+    "intent": "buy",
+    "urgency": "low",
+    "propertyType": "condo",
+    "timeline": "tahun depan"
+  },
+  "c04_bsd_rent_house_asap": {
+    "budgetIDR": 20000000,
+    "areas": ["BSD"],
+    "intent": "rent",
+    "urgency": "high",
+    "propertyType": "rumah",
+    "timeline": "minggu ini"
+  },
+  "c05_jkt_buy_apartment_seller_nego": {
+    "budgetIDR": 900000000,
+    "areas": ["Kemang"],
+    "intent": "buy",
+    "urgency": "low",
+    "propertyType": "apartemen",
+    "timeline": null
+  },
+  "c06_jkt_land_buy_nextyear": {
+    "budgetIDR": 2000000000,
+    "areas": ["Bintaro"],
+    "intent": "buy",
+    "urgency": "low",
+    "propertyType": "tanah kavling",
+    "timeline": "tahun depan"
+  },
+  "c07_multi_area_rent_apartment": {
+    "budgetIDR": null,
+    "areas": ["BSD", "Alam Sutera"],
+    "intent": "rent",
+    "urgency": "unknown",
+    "propertyType": "apartemen 1BR",
+    "timeline": null
+  },
+  "c08_sparse_general_inquiry": {
+    "budgetIDR": null,
+    "areas": [],
+    "intent": "unknown",
+    "urgency": "unknown",
+    "propertyType": "rumah",
+    "timeline": null
+  },
+  "c09_sparse_smalltalk_only": {
+    "budgetIDR": null,
+    "areas": [],
+    "intent": "unknown",
+    "urgency": "unknown",
+    "propertyType": null,
+    "timeline": null
+  },
+  "c10_sparse_voicenote_dropoff": {
+    "budgetIDR": null,
+    "areas": [],
+    "intent": "unknown",
+    "urgency": "unknown",
+    "propertyType": null,
+    "timeline": null
+  },
+  "c11_adversarial_agent_states_budget": {
+    "budgetIDR": null,
+    "areas": ["Alam Sutera"],
+    "intent": "buy",
+    "urgency": "unknown",
+    "propertyType": "apartemen 2BR",
+    "timeline": null
+  },
+  "c12_adversarial_friend_budget": {
+    "budgetIDR": null,
+    "areas": [],
+    "intent": "unknown",
+    "urgency": "unknown",
+    "propertyType": null,
+    "timeline": null
+  }
+}
