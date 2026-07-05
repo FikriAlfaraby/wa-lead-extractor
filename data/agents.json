@@ -1,0 +1,24 @@
+[
+  {
+    "id": "agent_amelia_sg",
+    "name": "Amelia Tan",
+    "voice": {
+      "tone": "warm-professional",
+      "language": "en-sg",
+      "signOff": "Best, Amelia",
+      "emojiPolicy": "sparing",
+      "maxSentences": 4
+    }
+  },
+  {
+    "id": "agent_budi_id",
+    "name": "Budi Santoso",
+    "voice": {
+      "tone": "casual-direct",
+      "language": "id",
+      "signOff": "Salam, Budi",
+      "emojiPolicy": "none",
+      "maxSentences": 3
+    }
+  }
+]
