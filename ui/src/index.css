@@ -27,6 +27,14 @@
   --guardrail-fail: #b91c1c;
   --guardrail-fail-bg: #fef2f2;
 
+  --chat-bg: #e9edf1;
+  --chat-bg-pattern: rgba(0, 0, 0, 0.03);
+  --bubble-lead: #ffffff;
+  --bubble-lead-text: #1c1f26;
+  --bubble-agent: #d9fdd3;
+  --bubble-agent-text: #1c1f26;
+  --bubble-highlight: #fde68a;
+
   color-scheme: light dark;
   font: 15px/1.5 -apple-system, "Inter", "Segoe UI", Roboto, sans-serif;
 }
@@ -42,6 +50,14 @@
     --accent-soft: rgba(129, 140, 248, 0.15);
 
     --guardrail-fail-bg: rgba(185, 28, 28, 0.12);
+
+    --chat-bg: #0b141a;
+    --chat-bg-pattern: rgba(255, 255, 255, 0.03);
+    --bubble-lead: #202c33;
+    --bubble-lead-text: #e9edef;
+    --bubble-agent: #005c4b;
+    --bubble-agent-text: #e9edef;
+    --bubble-highlight: #b45309;
   }
 }
 

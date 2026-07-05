@@ -16,6 +16,12 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Pipeline simulator: import the pure, network-free modules from the
+       root pipeline (../src) straight into the browser build. */
+    "paths": {
+      "@pipeline/*": ["../src/*"]
+    },
+
     /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,

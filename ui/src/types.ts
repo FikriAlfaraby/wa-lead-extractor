@@ -1,11 +1,10 @@
-export type LeadState = "new" | "warm" | "cold";
+// Reuse the real pipeline's state unions instead of hand-duplicating them,
+// now that ui/ can import the pure src/ modules directly (see @pipeline
+// alias in vite.config.ts / tsconfig.app.json).
+import type { LeadState } from "@pipeline/classify";
+import type { QualificationState } from "@pipeline/qualify";
 
-export type QualificationState =
-  | "new"
-  | "qualifying"
-  | "qualified"
-  | "disqualified"
-  | "handed_off";
+export type { LeadState, QualificationState };
 
 export interface GuardrailStatus {
   passed: boolean;
