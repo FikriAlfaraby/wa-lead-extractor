@@ -1,0 +1,23 @@
+{
+  "name": "wa-lead-extractor",
+  "version": "1.0.0",
+  "description": "Extracts structured lead facts from WhatsApp property conversations without hallucinating, using a staged deterministic-first pipeline and a cite-or-null guardrail.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "eval": "tsx eval/run-eval.ts",
+    "eval:messages": "tsx eval/run-message-eval.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "openai": "^4.68.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "tsx": "^4.19.1",
+    "vitest": "^2.1.3",
+    "@types/node": "^20.16.11"
+  }
+}

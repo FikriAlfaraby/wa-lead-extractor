@@ -1,0 +1,173 @@
+[
+  {
+    "id": "c01_bsd_buy_urgent",
+    "note": "Normal: clear buy intent, BSD area, explicit budget, high urgency.",
+    "messages": [
+      { "speaker": "lead", "text": "Halo gan, liat listing BSD yg di IG masih available ga?" },
+      { "speaker": "agent", "text": "Halo kak, masih available. Mau lihat detailnya?" },
+      { "speaker": "lead", "text": "Boleh. Btw saya mau beli ya bukan sewa, buat rumah tinggal" },
+      { "speaker": "agent", "text": "Oke noted kak, budget kisaran berapa biar saya carikan yg pas?" },
+      { "speaker": "lead", "text": "budget saya sekitar 1.5M all-in udah termasuk pajak" },
+      { "speaker": "agent", "text": "Siap, area BSD prefer yg mana kak, deket tol atau deket sekolah?" },
+      { "speaker": "lead", "text": "deket tol aja gapapa, yg penting BSD City area sini" },
+      { "speaker": "agent", "text": "Oke, kalau timeline mau closing kapan kak?" },
+      { "speaker": "lead", "text": "bulan ini kalo bisa gan, soalnya kontrakan lama abis" },
+      { "speaker": "agent", "text": "Wah cepat ya, saya kirimkan beberapa unit rumah dulu ya kak" },
+      { "speaker": "lead", "text": "oke ditunggu, bs nego ga harganya?" }
+    ]
+  },
+  {
+    "id": "c02_jaksel_rent_medium",
+    "note": "Normal: rent, Jaksel area, monthly budget, medium urgency (implicit, no explicit keyword).",
+    "messages": [
+      { "speaker": "agent", "text": "Selamat siang, ada yang bisa dibantu?" },
+      { "speaker": "lead", "text": "siang, mau cari sewa apartemen studio daerah Jaksel" },
+      { "speaker": "agent", "text": "Baik kak, budget per bulan kira2 berapa?" },
+      { "speaker": "lead", "text": "15jt an per bulan kalo bisa udah include service charge" },
+      { "speaker": "agent", "text": "Noted, ada preferensi tower atau bangunan tahun berapa?" },
+      { "speaker": "lead", "text": "ga terlalu pilih2 yg penting deket MRT" },
+      { "speaker": "agent", "text": "Ok kak, saya cek dulu unit yg available ya" },
+      { "speaker": "lead", "text": "makasih gan, oiya kapan mau pindah masih blm pasti, liat2 dulu aja" }
+    ]
+  },
+  {
+    "id": "c03_sg_buy_condo_lowurgency",
+    "note": "Normal: buy, Singapore, condo, next-year timeline, low urgency keyword.",
+    "messages": [
+      { "speaker": "lead", "text": "Hi, saw your listing for a condo in Singapore" },
+      { "speaker": "agent", "text": "Hi! Yes we have a few units. Are you looking to buy or rent?" },
+      { "speaker": "lead", "text": "looking to buy, for investment sih" },
+      { "speaker": "agent", "text": "Great, any budget range in mind?" },
+      { "speaker": "lead", "text": "kalo dirupiahkan kira2 2 miliar lah, masih survey2 sih blm final" },
+      { "speaker": "agent", "text": "Understood. Any area preference in SG?" },
+      { "speaker": "lead", "text": "District 9 atau 10 kalo ada, condo aja bukan HDB" },
+      { "speaker": "agent", "text": "Noted, timeline kira2 kapan mau closing?" },
+      { "speaker": "lead", "text": "santai aja gan, mungkin tahun depan baru serius" },
+      { "speaker": "agent", "text": "Baik, saya siapkan beberapa opsi ya" }
+    ]
+  },
+  {
+    "id": "c04_bsd_rent_house_asap",
+    "note": "Normal: rent house BSD, monthly budget, ASAP urgency, typo-heavy.",
+    "messages": [
+      { "speaker": "lead", "text": "gan ad rumah kontrakan BSD ga yg 3kt" },
+      { "speaker": "agent", "text": "Ada kak, budget sewa per tahun atau per bulan nih maunya?" },
+      { "speaker": "lead", "text": "per bulan aja, 20jt masih bs kan" },
+      { "speaker": "agent", "text": "Bisa dicariin kak, mau nya area BSD mana?" },
+      { "speaker": "lead", "text": "deket De Park situ aja gan" },
+      { "speaker": "agent", "text": "oke, kapan rencana mau pindah?" },
+      { "speaker": "lead", "text": "asap bgt gan, minggu ini kalo bisa krn kontrakan skrg abis" },
+      { "speaker": "agent", "text": "wah ok kak saya prioritaskan, tunggu ya" },
+      { "speaker": "lead", "text": "[voice note - 0:42]" },
+      { "speaker": "agent", "text": "noted kak sesuai voice note nya" }
+    ]
+  },
+  {
+    "id": "c05_jkt_buy_apartment_seller_nego",
+    "note": "Normal: buy apartment Jakarta, explicit budget with decimal, topic drift to parking.",
+    "messages": [
+      { "speaker": "lead", "text": "permisi, unit apartemen di Kemang yg diposting masih ada?" },
+      { "speaker": "agent", "text": "Masih kak, mau dijadwalkan survey?" },
+      { "speaker": "lead", "text": "boleh, ini beli ya bukan sewa" },
+      { "speaker": "agent", "text": "siap, budget nya berapa kak biar match" },
+      { "speaker": "lead", "text": "Rp 900 juta paling mentok, itu udah termasuk parkir ga sih biasanya?" },
+      { "speaker": "agent", "text": "tergantung unit kak, ada yg include ada yg beli terpisah" },
+      { "speaker": "lead", "text": "oh gitu, ok deh. area kemang aja sih maunya, deket kantor" },
+      { "speaker": "agent", "text": "noted, kapan available buat survey?" },
+      { "speaker": "lead", "text": "weekend ini bisa, tp ga buru2 juga sih nyarinya, masih compare2" }
+    ]
+  },
+  {
+    "id": "c06_jkt_land_buy_nextyear",
+    "note": "Normal: buy land, larger budget in miliar shorthand, low urgency.",
+    "messages": [
+      { "speaker": "lead", "text": "halo, tanah kavling di Bintaro masih ready?" },
+      { "speaker": "agent", "text": "Ready kak, mau brp kavling?" },
+      { "speaker": "lead", "text": "1 aja, buat dibangun rumah sendiri, ini mau beli" },
+      { "speaker": "agent", "text": "oke, budget kira2 berapa kak?" },
+      { "speaker": "lead", "text": "2M an lah kalo lokasinya strategis" },
+      { "speaker": "agent", "text": "noted, timeline nya gimana?" },
+      { "speaker": "lead", "text": "tahun depan baru mau eksekusi, taun ini ngumpulin dana dulu" },
+      { "speaker": "agent", "text": "siap kak, saya kabari kalau ada kavling baru" }
+    ]
+  },
+  {
+    "id": "c07_multi_area_rent_apartment",
+    "note": "Normal: rent, multiple areas mentioned by lead, no urgency keyword hit.",
+    "messages": [
+      { "speaker": "lead", "text": "mau cari sewa apartemen, tp masih bingung area" },
+      { "speaker": "agent", "text": "boleh kak, ada beberapa opsi area yg diliat?" },
+      { "speaker": "lead", "text": "BSD sama Alam Sutera dua2nya lagi dipertimbangin" },
+      { "speaker": "agent", "text": "oke, budget per bulan kira2?" },
+      { "speaker": "lead", "text": "blm kepikiran budget pastinya, masih riset2" },
+      { "speaker": "agent", "text": "gapapa kak, tipe unit yg dicari studio atau 1BR?" },
+      { "speaker": "lead", "text": "1BR kayanya, buat sendiri aja" },
+      { "speaker": "agent", "text": "siap noted ya kak" }
+    ]
+  },
+  {
+    "id": "c08_sparse_general_inquiry",
+    "note": "Sparse: only propertyType surfaces, everything else stays unstated.",
+    "messages": [
+      { "speaker": "lead", "text": "halo min, msh jual rumah?" },
+      { "speaker": "agent", "text": "halo kak, iya masih ada beberapa unit" },
+      { "speaker": "lead", "text": "oh oke" },
+      { "speaker": "agent", "text": "mau saya kirimkan katalognya?" },
+      { "speaker": "lead", "text": "boleh sih, kirim aja dulu" },
+      { "speaker": "agent", "text": "siap kak, ini ya katalognya [image]" },
+      { "speaker": "lead", "text": "ok nanti saya liat2 dulu" }
+    ]
+  },
+  {
+    "id": "c09_sparse_smalltalk_only",
+    "note": "Sparse: pure small talk, nothing extractable at all. Golden output should be entirely null/empty/unknown.",
+    "messages": [
+      { "speaker": "lead", "text": "gan ini nomor yg buat listing di marketplace kmrn ya?" },
+      { "speaker": "agent", "text": "iya betul kak, ada yang bisa dibantu?" },
+      { "speaker": "lead", "text": "oh oke, mau tanya2 dulu aja" },
+      { "speaker": "agent", "text": "boleh banget kak, silahkan" },
+      { "speaker": "lead", "text": "daerah situ macet ga sih pagi2?" },
+      { "speaker": "agent", "text": "lumayan kak kalo jam berangkat kerja" },
+      { "speaker": "lead", "text": "hmm oke deh, makasih infonya" }
+    ]
+  },
+  {
+    "id": "c10_sparse_voicenote_dropoff",
+    "note": "Sparse: lead only sends voice notes/stickers, conversation trails off with no facts.",
+    "messages": [
+      { "speaker": "lead", "text": "gan ada yg dket stasiun ga" },
+      { "speaker": "agent", "text": "ada beberapa kak, boleh tau ini nyari beli atau sewa dulu?" },
+      { "speaker": "lead", "text": "[voice note - 1:03]" },
+      { "speaker": "agent", "text": "maaf kak voice note nya ga kedengeran jelas, bisa diketik aja?" },
+      { "speaker": "lead", "text": "[sticker]" },
+      { "speaker": "agent", "text": "kak?" },
+      { "speaker": "lead", "text": "nanti saya telpon aja ya gan" }
+    ]
+  },
+  {
+    "id": "c11_adversarial_agent_states_budget",
+    "note": "Adversarial: the AGENT floats a budget figure but the lead never confirms it. budgetIDR must be null.",
+    "messages": [
+      { "speaker": "lead", "text": "gan unit di Alam Sutera yg 2BR msh ada?" },
+      { "speaker": "agent", "text": "masih kak, biasanya yg nanya unit itu budgetnya di kisaran 1.5M ya kak, apa itu sesuai?" },
+      { "speaker": "lead", "text": "hmm blm tau juga sih, saya liat2 dulu aja unitnya gimana" },
+      { "speaker": "agent", "text": "oke kak, ini fotonya ya [image]" },
+      { "speaker": "lead", "text": "oh lumayan, ini beli ya bukan sewa" },
+      { "speaker": "agent", "text": "iya kak ini listing jual" },
+      { "speaker": "lead", "text": "ok nanti saya kabarin lagi soal budgetnya" }
+    ]
+  },
+  {
+    "id": "c12_adversarial_friend_budget",
+    "note": "Adversarial: lead mentions a FRIEND's budget/situation, not their own. budgetIDR must be null. Money phrase spelled out in words so deterministic regex correctly does not fire on it either.",
+    "messages": [
+      { "speaker": "lead", "text": "gan ini beda konteks dikit, temen gue kmrn baru beli rumah di Bintaro" },
+      { "speaker": "agent", "text": "oh iya kak, kenapa ya?" },
+      { "speaker": "lead", "text": "temen gue budgetnya sekitar setengah miliar an, katanya dapet bagus tuh" },
+      { "speaker": "agent", "text": "wah lumayan kak, kalau kakak sendiri gimana rencananya?" },
+      { "speaker": "lead", "text": "kalo gue sih belom mikir jauh2, msh liat2 aja dulu skrg" },
+      { "speaker": "agent", "text": "oke kak santai aja, kabarin kalau udah ada gambaran" },
+      { "speaker": "lead", "text": "sip gan nanti gue kabarin" }
+    ]
+  }
+]
