@@ -220,7 +220,30 @@ Treat the judge as a dashboard metric, not a gate — same posture as
 "accuracy is not the eval's north star, hallucination rate is" in the
 extraction eval.
 
-## 6. Product surface: the approval queue
+## 6. Product surface: the Pipeline Simulator and approval queue
+
+`ui/` now opens on **Live demo**, a real interactive chat against the
+Worker's `/api/analyze` and `/api/draft` endpoints — type as the lead (or
+click a suggested message) and watch actual LLM extraction, the citation
+guardrail, and the qualification state machine run server-side, with a
+friendly banner if the API backend isn't reachable. The scripted
+**Pipeline Simulator** is the second tab: a WhatsApp-style
+conversation plays on the left while the right pane shows exactly what the
+pipeline sees at each step — extracted facts (click one to jump to its
+cited message), the lead-state and qualification state machine with real
+transition reasons, and the AI draft with a live guardrail verdict. The
+three scripted scenarios exist specifically to make the guardrails' payoff
+visible: a clean extraction that sails through, an agent-floated budget the
+guardrail visibly rejects, and a friend's-budget citation that passes the
+mechanical check but is flagged as the exact attribution gap described in
+§4. Deterministic code (`classify.ts`, `qualify.ts`, `guardrail.ts`,
+`writer-guardrail.ts`, `deterministic.ts`) is imported straight from `src/`
+via a Vite alias and runs for real in the browser on every step; only the
+LLM extraction/draft outputs are pre-recorded from real pipeline runs,
+since no network calls happen client-side — the footer says so explicitly,
+on every screen. A "Send to approval queue" action carries the finished
+simulated lead into the second tab, the original **Queue** view, described
+below.
 
 `ui/` is a minimal React "follow-up queue": one screen, three sections
 (pending review, sent, needs rework), each row showing the lead's state
