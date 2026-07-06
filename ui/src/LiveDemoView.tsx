@@ -251,7 +251,7 @@ export function LiveDemoView({ onAddToQueue }: { onAddToQueue: (row: LeadRow) =>
               <select value={agentId} onChange={(e) => setAgentId(e.target.value)}>
                 {agents.map((a) => (
                   <option key={a.id} value={a.id}>
-                    {a.name}
+                    {a.name} — {a.voice.language === "id" ? "Bahasa Indonesia" : "English (SG)"}
                   </option>
                 ))}
               </select>
