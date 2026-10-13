@@ -190,6 +190,10 @@ accuracy that occasionally invents a budget; a fabricated "urgent" tag
 drives a real, bad sales action. The harness exits non-zero above 0%
 hallucination, as a regression gate.
 
+The last recorded run is kept in `eval/results/2026-07-05-deepseek-v4-flash.json`: accuracy 83.3%,
+hallucination rate 26.7% (12 of 45 filled fields wrong), so it fails the gate. New runs write
+`eval/report.json`, which is not committed.
+
 **Message-quality evals** (`eval/run-message-eval.ts`, new): runs
 classify → qualify → write → writer-guardrail → judge over 6 selected
 conversations × both agent voice profiles (12 combinations), and reports:

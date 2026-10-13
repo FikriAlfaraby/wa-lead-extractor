@@ -1,0 +1,195 @@
+{
+  "generatedAt": "2026-07-05T17:43:26.338Z",
+  "model": "deepseek-v4-flash",
+  "overall": {
+    "accuracy": 0.8333333333333334,
+    "precision": 0.7333333333333333,
+    "recall": 0.8333333333333334,
+    "hallucinationRate": 0.26666666666666666
+  },
+  "perField": {
+    "budgetIDR": {
+      "correct": 12,
+      "total": 12,
+      "hallucinations": 0,
+      "predictedNonEmpty": 6
+    },
+    "areas": {
+      "correct": 8,
+      "total": 12,
+      "hallucinations": 4,
+      "predictedNonEmpty": 8
+    },
+    "intent": {
+      "correct": 10,
+      "total": 12,
+      "hallucinations": 2,
+      "predictedNonEmpty": 10
+    },
+    "urgency": {
+      "correct": 10,
+      "total": 12,
+      "hallucinations": 2,
+      "predictedNonEmpty": 7
+    },
+    "propertyType": {
+      "correct": 9,
+      "total": 12,
+      "hallucinations": 3,
+      "predictedNonEmpty": 9
+    },
+    "timeline": {
+      "correct": 11,
+      "total": 12,
+      "hallucinations": 1,
+      "predictedNonEmpty": 5
+    }
+  },
+  "perConversation": [
+    {
+      "id": "c01_bsd_buy_urgent",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": false,
+        "intent": true,
+        "urgency": true,
+        "propertyType": true,
+        "timeline": true
+      },
+      "violations": 0
+    },
+    {
+      "id": "c02_jaksel_rent_medium",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": true,
+        "urgency": true,
+        "propertyType": true,
+        "timeline": false
+      },
+      "violations": 0
+    },
+    {
+      "id": "c03_sg_buy_condo_lowurgency",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": false,
+        "intent": true,
+        "urgency": true,
+        "propertyType": true,
+        "timeline": true
+      },
+      "violations": 1
+    },
+    {
+      "id": "c04_bsd_rent_house_asap",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": false,
+        "intent": true,
+        "urgency": true,
+        "propertyType": true,
+        "timeline": true
+      },
+      "violations": 0
+    },
+    {
+      "id": "c05_jkt_buy_apartment_seller_nego",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": true,
+        "urgency": true,
+        "propertyType": false,
+        "timeline": true
+      },
+      "violations": 0
+    },
+    {
+      "id": "c06_jkt_land_buy_nextyear",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": true,
+        "urgency": true,
+        "propertyType": true,
+        "timeline": true
+      },
+      "violations": 0
+    },
+    {
+      "id": "c07_multi_area_rent_apartment",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": false,
+        "intent": true,
+        "urgency": true,
+        "propertyType": false,
+        "timeline": true
+      },
+      "violations": 1
+    },
+    {
+      "id": "c08_sparse_general_inquiry",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": false,
+        "urgency": true,
+        "propertyType": true,
+        "timeline": true
+      },
+      "violations": 0
+    },
+    {
+      "id": "c09_sparse_smalltalk_only",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": true,
+        "urgency": true,
+        "propertyType": true,
+        "timeline": true
+      },
+      "violations": 0
+    },
+    {
+      "id": "c10_sparse_voicenote_dropoff",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": true,
+        "urgency": true,
+        "propertyType": true,
+        "timeline": true
+      },
+      "violations": 0
+    },
+    {
+      "id": "c11_adversarial_agent_states_budget",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": true,
+        "urgency": false,
+        "propertyType": false,
+        "timeline": true
+      },
+      "violations": 0
+    },
+    {
+      "id": "c12_adversarial_friend_budget",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": false,
+        "urgency": false,
+        "propertyType": true,
+        "timeline": true
+      },
+      "violations": 0
+    }
+  ],
+  "guardrailViolations": 2
+}
