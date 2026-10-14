@@ -195,28 +195,37 @@ reply in `eval/recordings/`; `eval/score-recording.ts` scores a recording with n
 the same `runPipeline` the product uses. A test re-scores every recording and must reproduce the
 published results, so the numbers cannot drift from the evidence.
 
-Recorded 14 Oct 2026 through an OpenAI-compatible gateway:
+Recorded 14 Oct 2026 through an OpenAI-compatible gateway. Facts counted wrong, of the facts
+each model filled in:
 
-| Model | Filled fields | Counted wrong | Hallucination rate |
+| Model | Exact text, before my fixes | Exact text, after | By the word rule |
 |---|---:|---:|---:|
-| GPT-6 Luna | 42 | 13 | 31.0% |
-| Gemini 3.8 Flash | 43 | 10 | 23.3% |
+| GPT-6 Luna | 13 of 42 (31.0%) | 11 of 41 (26.8%) | 6 of 41 (14.6%) |
+| Gemini 3.8 Flash | 10 of 43 (23.3%) | 9 of 42 (21.4%) | 4 of 42 (9.5%) |
 
-Both fail the 0% gate. Each fact the scorer counts wrong is reviewed against its conversation
-in `eval/review/2026-10-14.json` (a test keeps the review in step with the scorer). Of Luna's
-13, 8 are the right fact in other words, 2 are debatable labels, 1 is a true area the
-guardrail threw out, and 2 are really wrong; of Gemini's 10, 6 are right in other words,
-3 are debatable and 1 is really wrong. The scorer compares free text exactly ("rumah tinggal" is
-not "rumah"), so the rate mostly measures wording. The defects the review found:
+All of it fails the 0% gate. Every fact the scorer counted wrong is reviewed against its
+conversation in `eval/review/2026-10-14.json`, and a test keeps the review in step with the
+scorer. The review found three kinds of trouble:
 
-- **The rule-based stage reads a friend's purchase as the lead's intent** (c12): "temen gue kmrn
-  baru beli rumah" (my friend just bought a house) matches the keyword "beli rumah".
-- **Luna took a viewing day for a moving date** (c05): "weekend ini bisa".
-- **The guardrail threw out a true area** (c07): one quote named two areas, and it wants one quote
-  per area.
-- **Singapore money is read the Indonesian way**: "1.5M" (S$1.5 million) becomes IDR 1.5 billion
-  and reaches the draft (the simulator's Singapore scenario; both models had left it empty).
-- **The draft check raises false alarms**: a "10-minute call", and "Tampines" inside "Tampines MRT".
+- **My code, now fixed.** The rule-based stage read "temen gue kmrn baru beli rumah" (my friend
+  just bought a house) as the lead's intent to buy; it now drops clauses about a friend or a
+  relative. The quote check threw out a true area when one quote named two ("BSD sama Alam
+  Sutera"); an area named in another of the lead's area quotes is now kept. The "after" column is
+  the same replies run through the fixed code: no model output was re-rolled.
+- **The scorer.** Exact comparison counts "rumah tinggal" against "rumah" as invented. The word rule
+  (`valuesMatch` in `eval/score.ts`) matches free text when every word of the shorter value is in
+  the longer: "BSD City" matches "BSD", but a translation ("studio apartment") or an extra place
+  ("deket De Park") still counts as wrong. Budget, intent and urgency stay exact.
+- **What is left.** Under the word rule: Luna took a viewing day for a moving date (c05, "weekend
+  ini bisa"), which is really wrong; the rest are translations, an extra place the lead did name,
+  and labels in the answer key that are themselves debatable (urgency for "still just looking").
+
+The simulator also turned up three defects, fixed the same day: a Singapore "1.5M" (S$1.5 million)
+was read as IDR 1.5 billion and repeated in the drafts (conversations now carry a market, and
+outside Indonesia only rupiah said as rupiah is read); the draft check held back "a quick
+10-minute call" as an ungrounded number, and "Tampines" inside the lead's "Tampines MRT" as an
+unknown area. The scenario replies were recorded again after those fixes, because the writer's
+input changed.
 
 The July run (`eval/results/2026-07-05-deepseek-v4-flash.json`, 26.7%) kept only the scores, not
 the replies, so it cannot be reviewed the same way. `npm run eval` still runs live and writes

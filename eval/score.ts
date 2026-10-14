@@ -24,6 +24,42 @@ function isEmptyValue(field: Field, value: unknown): boolean {
   return value === null;
 }
 
+function words(text: string): string[] {
+  return text
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim()
+    .split(" ")
+    .filter(Boolean);
+}
+
+/** The word rule: two free-text values match when every word of the shorter is in the longer. */
+function sameWords(a: string, b: string): boolean {
+  const [short, long] = words(a).length <= words(b).length ? [words(a), words(b)] : [words(b), words(a)];
+  if (short.length === 0) return long.length === 0;
+  const pool = new Set(long);
+  return short.every((w) => pool.has(w));
+}
+
+/**
+ * Exact comparison counts "rumah tinggal" against "rumah" as an invented fact. The word rule
+ * compares free text (areas, property type, timeline) by words instead: "rumah tinggal" and
+ * "rumah" match, "BSD City" and "BSD" match; a translation ("studio apartment") or an extra place
+ * ("deket De Park") still does not. Budget, intent and urgency stay exact.
+ */
+export function valuesMatch(field: Field, predicted: unknown, expected: unknown): boolean {
+  if (field === "areas") {
+    const p = Array.isArray(predicted) ? predicted.map(String) : [];
+    const e = Array.isArray(expected) ? expected.map(String) : [];
+    if (p.length === 0 || e.length === 0) return p.length === e.length;
+    return e.every((x) => p.some((y) => sameWords(x, y))) && p.every((y) => e.some((x) => sameWords(x, y)));
+  }
+  if (field === "propertyType" || field === "timeline") {
+    return typeof predicted === "string" && typeof expected === "string" ? sameWords(predicted, expected) : predicted === expected;
+  }
+  return predicted === expected;
+}
+
 function valuesEqual(field: Field, a: unknown, b: unknown): boolean {
   if (field === "areas") {
     const arrA = Array.isArray(a) ? [...a].sort() : [];
@@ -52,13 +88,22 @@ export interface ConversationScore {
   rejected: Violation[];
 }
 
+export interface Overall {
+  accuracy: number;
+  precision: number;
+  recall: number;
+  hallucinationRate: number;
+}
+
 export interface EvalReport {
   model: string;
-  overall: { accuracy: number; precision: number; recall: number; hallucinationRate: number };
+  overall: Overall;
   perField: Record<Field, FieldStats>;
   perConversation: ConversationScore[];
   guardrailViolations: number;
   unreadable: number;
+  /** The same profiles scored by the word rule (see valuesMatch). */
+  byWords: { overall: Overall; perField: Record<Field, FieldStats>; wrong: { conversation: string; field: Field }[] };
 }
 
 export interface EvalItem {
@@ -68,10 +113,36 @@ export interface EvalItem {
   extraction: LlmExtraction | null;
 }
 
+const emptyStats = () =>
+  Object.fromEntries(FIELDS.map((f) => [f, { correct: 0, total: 0, hallucinations: 0, predictedNonEmpty: 0 }])) as Record<Field, FieldStats>;
+
+function overallOf(perField: Record<Field, FieldStats>): Overall {
+  const sum = (key: keyof FieldStats) => FIELDS.reduce((n, f) => n + perField[f][key], 0);
+  const correct = sum("correct");
+  const total = sum("total");
+  const predicted = sum("predictedNonEmpty");
+  const hallucinations = sum("hallucinations");
+  return {
+    accuracy: correct / total,
+    precision: predicted === 0 ? 1 : (predicted - hallucinations) / predicted,
+    recall: correct / total,
+    hallucinationRate: predicted === 0 ? 0 : hallucinations / predicted,
+  };
+}
+
+function tally(stats: FieldStats, match: boolean, empty: boolean): void {
+  stats.total += 1;
+  if (match) stats.correct += 1;
+  if (!empty) {
+    stats.predictedNonEmpty += 1;
+    if (!match) stats.hallucinations += 1;
+  }
+}
+
 export async function scoreRun(model: string, items: EvalItem[]): Promise<EvalReport> {
-  const perField = Object.fromEntries(
-    FIELDS.map((f) => [f, { correct: 0, total: 0, hallucinations: 0, predictedNonEmpty: 0 }])
-  ) as Record<Field, FieldStats>;
+  const perField = emptyStats();
+  const byWordsField = emptyStats();
+  const wrongByWords: { conversation: string; field: Field }[] = [];
   const perConversation: ConversationScore[] = [];
 
   for (const { conversation, golden, extraction } of items) {
@@ -83,15 +154,13 @@ export async function scoreRun(model: string, items: EvalItem[]): Promise<EvalRe
 
     const fieldMatches = {} as Record<Field, boolean>;
     for (const field of FIELDS) {
-      const stats = perField[field];
+      const empty = isEmptyValue(field, profile[field]);
       const match = valuesEqual(field, profile[field], golden[field]);
       fieldMatches[field] = match;
-      stats.total += 1;
-      if (match) stats.correct += 1;
-      if (!isEmptyValue(field, profile[field])) {
-        stats.predictedNonEmpty += 1;
-        if (!match) stats.hallucinations += 1;
-      }
+      tally(perField[field], match, empty);
+      const ruleMatch = valuesMatch(field, profile[field], golden[field]);
+      tally(byWordsField[field], ruleMatch, empty);
+      if (!ruleMatch) wrongByWords.push({ conversation: conversation.id, field });
     }
 
     perConversation.push({
@@ -105,24 +174,14 @@ export async function scoreRun(model: string, items: EvalItem[]): Promise<EvalRe
     });
   }
 
-  const sum = (key: keyof FieldStats) => FIELDS.reduce((n, f) => n + perField[f][key], 0);
-  const correct = sum("correct");
-  const total = sum("total");
-  const predicted = sum("predictedNonEmpty");
-  const hallucinations = sum("hallucinations");
-
   return {
     model,
-    overall: {
-      accuracy: correct / total,
-      precision: predicted === 0 ? 1 : (predicted - hallucinations) / predicted,
-      recall: correct / total,
-      hallucinationRate: predicted === 0 ? 0 : hallucinations / predicted,
-    },
+    overall: overallOf(perField),
     perField,
     perConversation,
     guardrailViolations: perConversation.reduce((n, c) => n + c.violations, 0),
     unreadable: perConversation.filter((c) => c.unreadable).length,
+    byWords: { overall: overallOf(byWordsField), perField: byWordsField, wrong: wrongByWords },
   };
 }
 
@@ -152,7 +211,7 @@ export function printReport(report: EvalReport): void {
   console.log(`  accuracy:           ${pct(overall.accuracy)}`);
   console.log(`  precision:          ${pct(overall.precision)}`);
   console.log(`  recall:             ${pct(overall.recall)}`);
-  console.log(`  hallucination rate: ${pct(overall.hallucinationRate)}`);
+  console.log(`  hallucination rate: ${pct(overall.hallucinationRate)}  (by the word rule: ${pct(report.byWords.overall.hallucinationRate)})`);
   console.log(`  guardrail violations caught: ${report.guardrailViolations}`);
   console.log(`  unreadable replies: ${report.unreadable}`);
 }

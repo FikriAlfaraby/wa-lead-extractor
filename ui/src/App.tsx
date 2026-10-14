@@ -43,8 +43,8 @@ function App() {
       <footer className="app-footer">
         The checks run in your browser: the same code as <code>src/</code>. The Simulator replays
         model answers recorded from real calls (<code>eval/recordings/</code>); the Live demo calls
-        the Worker API. Money is read the Indonesian way (jt = million, M/miliar = billion), so a
-        Singapore &ldquo;1.5M&rdquo; is misread as 1.5 billion IDR, as the Simulator shows.
+        the Worker API. Money is read by market: in an Indonesian chat &ldquo;1.5M&rdquo; is 1.5
+        miliar rupiah; in a Singapore chat only rupiah said as rupiah counts.
       </footer>
     </div>
   );

@@ -96,9 +96,10 @@ coverage matures. Agents stay in control of every real conversation.
 **Decision:** `jt`/`juta` = ×10⁶, `M`/`miliar` = ×10⁹ — so `1.5M` parses as
 1.5 *billion* IDR, matching how Indonesian property chat uses "M".
 
-**Known gap (found 14 Oct 2026 by recording real replies):** Singapore chat uses "M" for million,
-in Singapore dollars, so a Singapore "1.5M" is misread as IDR 1.5 billion and reaches the draft.
-Money rules need to be per market.
+**Fixed 14 Oct 2026 (found by recording real replies):** Singapore chat uses "M" for million, in
+Singapore dollars, so a Singapore "1.5M" was misread as IDR 1.5 billion and reached the draft.
+Conversations now carry a `market`; outside Indonesia only rupiah said as rupiah ("2 miliar",
+"Rp 900 juta") is read, and a Singapore budget stays empty rather than wrong.
 
 **Why it matters:** a US-trained assumption (`M` = million) silently corrupts
 every budget by 1000×. Domain conventions belong in code, tested, not in tribal

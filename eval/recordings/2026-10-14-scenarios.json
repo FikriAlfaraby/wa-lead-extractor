@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-10-14T09:14:31.950Z",
+  "recordedAt": "2026-10-14T14:36:14.945Z",
   "gateway": "9router (OpenAI-compatible gateway)",
   "models": [
     "cx/gpt-6-luna",
@@ -19,11 +19,11 @@
             "areas": {
               "value": [
                 "BSD",
-                "deket AEON BSD"
+                "AEON BSD"
               ],
               "citations": [
                 "rumah di BSD",
-                "deket AEON BSD aja kak"
+                "deket AEON BSD"
               ]
             },
             "intent": {
@@ -52,7 +52,7 @@
               "budgetIDR": 1500000000,
               "areas": [
                 "BSD",
-                "deket AEON BSD"
+                "AEON BSD"
               ],
               "intent": "buy",
               "urgency": "high",
@@ -62,12 +62,11 @@
             "leadState": "warm"
           },
           "output": {
-            "message": "Siap, saya catat Anda mencari rumah di BSD atau dekat AEON BSD dengan budget Rp1,5 miliar, rencana beli bulan depan, dan kebutuhan yang cukup mendesak. Boleh saya mulai carikan opsi yang sesuai? Salam, Budi",
+            "message": "Siap, saya bantu fokuskan pencarian rumah untuk dibeli di BSD atau sekitar AEON BSD, dengan budget Rp1,5 miliar dan target bulan depan. Bisa kita jadwalkan konsultasi singkat hari ini untuk bahas langkah berikutnya? Salam, Budi",
             "factsUsed": [
               "budget: 1500000000 IDR",
-              "areas: BSD, deket AEON BSD",
+              "areas: BSD, AEON BSD",
               "intent: buy",
-              "urgency: high",
               "property type: rumah",
               "timeline: bulan depan"
             ]
@@ -128,12 +127,12 @@
             "leadState": "warm"
           },
           "output": {
-            "message": "Halo, untuk rencana beli rumah di BSD dengan budget 1,5 miliar IDR buat bulan depan, bisa kita jadwalkan telepon singkat hari ini? Salam, Budi",
+            "message": "Halo, terkait rencana beli rumah di area BSD atau AEON BSD dengan budget 1,5 miliar IDR untuk bulan depan, apakah kita bisa telepon sebentar besok untuk membahas langkah selanjutnya? Salam, Budi",
             "factsUsed": [
+              "budget: 1500000000 IDR",
+              "areas: BSD, AEON BSD",
               "intent: buy",
               "property type: rumah",
-              "areas: BSD, AEON BSD",
-              "budget: 1500000000 IDR",
               "timeline: bulan depan"
             ]
           }
@@ -160,7 +159,7 @@
             "leadState": "warm"
           },
           "output": {
-            "message": "Hi! I’m following up on your search to buy a 2-bedder in District 9. Would you be available for a quick call to discuss what you’re looking for? Best, Amelia",
+            "message": "Since you're looking to buy a 2-bedder in District 9, would you be free for a quick call to discuss suitable options?\n\nBest, Amelia",
             "factsUsed": [
               "areas: District 9",
               "intent: buy",
@@ -182,7 +181,7 @@
                 "District 9"
               ],
               "citations": [
-                "at District 9"
+                "District 9"
               ]
             },
             "intent": {
@@ -220,7 +219,7 @@
             "leadState": "warm"
           },
           "output": {
-            "message": "Hi! Shall we arrange a quick call to discuss 2-bedder options in District 9? Best, Amelia",
+            "message": "Happy to help with your search for a 2-bedder in District 9. What timing works best for a quick chat? Best, Amelia",
             "factsUsed": [
               "areas: District 9",
               "property type: 2-bedder"
@@ -279,7 +278,7 @@
             "leadState": "warm"
           },
           "output": {
-            "message": "Hi, hope your week is going well! Following up on your search for a 2-bedder in District 9, could we schedule a quick 10-minute call tomorrow to run through your preferences? 😊\n\nBest, Amelia",
+            "message": "Hi, hope your week is going well! Following up on your search for a 2-bedder in District 9, could we arrange a quick 10-minute call tomorrow to discuss your shortlist?\n\nBest, Amelia",
             "factsUsed": [
               "areas: District 9",
               "property type: 2-bedder"
@@ -306,12 +305,12 @@
               "citations": []
             },
             "intent": {
-              "value": null,
+              "value": "unknown",
               "citation": null
             },
             "urgency": {
               "value": "low",
-              "citation": "belom mikir jauh2"
+              "citation": "kalo gue sih belom mikir jauh2, msh liat2 aja dulu skrg"
             },
             "propertyType": {
               "value": null,
@@ -343,7 +342,7 @@
             },
             "urgency": {
               "value": "low",
-              "citation": "belom mikir jauh2, msh liat2 aja dulu skrg"
+              "citation": "msh liat2 aja dulu skrg"
             },
             "propertyType": {
               "value": null,
@@ -381,14 +380,14 @@
             },
             "urgency": {
               "value": "high",
-              "citation": "quite urgent leh"
+              "citation": "quite urgent leh, need to settle by next month"
             },
             "propertyType": {
               "value": "condo",
-              "citation": "saw your listing for the Tampines condo on PropertyGuru"
+              "citation": "the Tampines condo"
             },
             "timeline": {
-              "value": "next month",
+              "value": "by next month",
               "citation": "need to settle by next month"
             }
           }
@@ -398,25 +397,24 @@
           "writer": "cx/gpt-6-luna",
           "input": {
             "profile": {
-              "budgetIDR": 1500000000,
+              "budgetIDR": null,
               "areas": [
                 "Tampines MRT"
               ],
               "intent": "buy",
               "urgency": "high",
               "propertyType": "condo",
-              "timeline": "next month"
+              "timeline": "by next month"
             },
             "leadState": "warm"
           },
           "output": {
-            "message": "Hi! Since you’re looking to buy a condo near Tampines MRT next month with a budget of IDR 1.5 billion, shall I put together a shortlist for you? Best, Amelia",
+            "message": "Since you're looking to buy a condo near Tampines MRT by next month, I can shortlist suitable options for you. Would you like me to send them over today?\nBest, Amelia",
             "factsUsed": [
-              "budget: 1500000000 IDR",
               "areas: Tampines MRT",
               "intent: buy",
-              "property type: condo",
-              "timeline: next month"
+              "timeline: by next month",
+              "property type: condo"
             ]
           }
         }
@@ -431,15 +429,15 @@
             },
             "areas": {
               "value": [
-                "Tampines MRT"
+                "Tampines"
               ],
               "citations": [
-                "near Tampines MRT would be ideal"
+                "Tampines"
               ]
             },
             "intent": {
               "value": "buy",
-              "citation": "I'm looking to buy, not rent - for own stay"
+              "citation": "looking to buy"
             },
             "urgency": {
               "value": "high",
@@ -451,7 +449,7 @@
             },
             "timeline": {
               "value": "by next month",
-              "citation": "need to settle by next month"
+              "citation": "by next month"
             }
           }
         },
@@ -460,9 +458,9 @@
           "writer": "ag/gemini-3.8-flash",
           "input": {
             "profile": {
-              "budgetIDR": 1500000000,
+              "budgetIDR": null,
               "areas": [
-                "Tampines MRT"
+                "Tampines"
               ],
               "intent": "buy",
               "urgency": "high",
@@ -472,11 +470,11 @@
             "leadState": "warm"
           },
           "output": {
-            "message": "Hi! Following up on your search to buy a condo near Tampines MRT by next month within your 1,500,000,000 IDR budget. Since your timeline is tight, could we jump on a brief phone call tomorrow to discuss the next steps? Best, Amelia",
+            "message": "Hi there! Since you're looking to buy a condo in Tampines by next month, I want to ensure we keep to your urgent timeline.\n\nCould we schedule a quick 10-minute call tomorrow to discuss the next steps?\n\nBest, Amelia",
             "factsUsed": [
-              "budget: 1500000000 IDR",
-              "areas: Tampines MRT",
+              "areas: Tampines",
               "intent: buy",
+              "urgency: high",
               "property type: condo",
               "timeline: by next month"
             ]

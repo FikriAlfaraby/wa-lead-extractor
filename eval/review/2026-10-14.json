@@ -6,7 +6,8 @@
     "debatable": "The answer key itself is debatable",
     "guardrail": "True, but the guardrail threw part of it out",
     "wrong": "Really wrong",
-    "missed": "Left empty where the key has a value (not counted as a hallucination)"
+    "missed": "Left empty where the key has a value (not counted as a hallucination)",
+    "fixed": "Was wrong because of my code; fixed on 14 Oct and right on the same replies"
   },
   "facts": [
     {
@@ -69,8 +70,8 @@
       "model": "cx/gpt-6-luna",
       "conversation": "c07_multi_area_rent_apartment",
       "field": "areas",
-      "category": "guardrail",
-      "why": "The model found both areas but gave one quote for the two; the guardrail wants a quote per area and threw Alam Sutera out."
+      "category": "fixed",
+      "why": "Fixed: the model gave one quote for two areas and the quote check threw Alam Sutera out; an area named in another of the lead's area quotes is now kept."
     },
     {
       "model": "cx/gpt-6-luna",
@@ -104,8 +105,8 @@
       "model": "cx/gpt-6-luna",
       "conversation": "c12_adversarial_friend_budget",
       "field": "intent",
-      "category": "wrong",
-      "why": "From the rule-based stage, not the model: “temen gue kmrn baru beli rumah” (my friend just bought a house) matches its keyword “beli rumah”."
+      "category": "fixed",
+      "why": "Fixed: the rule-based stage read “temen gue kmrn baru beli rumah” (my friend just bought a house) as the lead's intent; it now ignores what the lead says about someone else."
     },
     {
       "model": "cx/gpt-6-luna",
@@ -181,8 +182,8 @@
       "model": "ag/gemini-3.8-flash",
       "conversation": "c12_adversarial_friend_budget",
       "field": "intent",
-      "category": "wrong",
-      "why": "From the rule-based stage, not the model: “temen gue kmrn baru beli rumah” (my friend just bought a house) matches its keyword “beli rumah”."
+      "category": "fixed",
+      "why": "Fixed: the rule-based stage read “temen gue kmrn baru beli rumah” (my friend just bought a house) as the lead's intent; it now ignores what the lead says about someone else."
     },
     {
       "model": "ag/gemini-3.8-flash",

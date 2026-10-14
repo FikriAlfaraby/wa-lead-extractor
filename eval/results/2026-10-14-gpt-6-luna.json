@@ -3,10 +3,10 @@
   "recording": "eval/recordings/2026-10-14-eval.json",
   "model": "cx/gpt-6-luna",
   "overall": {
-    "accuracy": 0.7916666666666666,
-    "precision": 0.6904761904761905,
-    "recall": 0.7916666666666666,
-    "hallucinationRate": 0.30952380952380953
+    "accuracy": 0.8194444444444444,
+    "precision": 0.7317073170731707,
+    "recall": 0.8194444444444444,
+    "hallucinationRate": 0.2682926829268293
   },
   "perField": {
     "budgetIDR": {
@@ -16,16 +16,16 @@
       "predictedNonEmpty": 6
     },
     "areas": {
-      "correct": 9,
+      "correct": 10,
       "total": 12,
-      "hallucinations": 3,
+      "hallucinations": 2,
       "predictedNonEmpty": 8
     },
     "intent": {
-      "correct": 10,
+      "correct": 11,
       "total": 12,
-      "hallucinations": 1,
-      "predictedNonEmpty": 8
+      "hallucinations": 0,
+      "predictedNonEmpty": 7
     },
     "urgency": {
       "correct": 11,
@@ -258,18 +258,19 @@
       "id": "c07_multi_area_rent_apartment",
       "fieldMatches": {
         "budgetIDR": true,
-        "areas": false,
+        "areas": true,
         "intent": true,
         "urgency": true,
         "propertyType": false,
         "timeline": true
       },
-      "violations": 1,
+      "violations": 0,
       "unreadable": false,
       "predicted": {
         "budgetIDR": null,
         "areas": [
-          "BSD"
+          "BSD",
+          "Alam Sutera"
         ],
         "intent": "rent",
         "urgency": "unknown",
@@ -287,13 +288,7 @@
         "propertyType": "apartemen 1BR",
         "timeline": null
       },
-      "rejected": [
-        {
-          "field": "areas[1]",
-          "reason": "missing_citation",
-          "citation": null
-        }
-      ]
+      "rejected": []
     },
     {
       "id": "c08_sparse_general_inquiry",
@@ -424,7 +419,7 @@
       "fieldMatches": {
         "budgetIDR": true,
         "areas": true,
-        "intent": false,
+        "intent": true,
         "urgency": false,
         "propertyType": true,
         "timeline": true
@@ -434,7 +429,7 @@
       "predicted": {
         "budgetIDR": null,
         "areas": [],
-        "intent": "buy",
+        "intent": "unknown",
         "urgency": "low",
         "propertyType": null,
         "timeline": null
@@ -450,6 +445,86 @@
       "rejected": []
     }
   ],
-  "guardrailViolations": 1,
-  "unreadable": 0
+  "guardrailViolations": 0,
+  "unreadable": 0,
+  "byWords": {
+    "overall": {
+      "accuracy": 0.8888888888888888,
+      "precision": 0.8536585365853658,
+      "recall": 0.8888888888888888,
+      "hallucinationRate": 0.14634146341463414
+    },
+    "perField": {
+      "budgetIDR": {
+        "correct": 12,
+        "total": 12,
+        "hallucinations": 0,
+        "predictedNonEmpty": 6
+      },
+      "areas": {
+        "correct": 11,
+        "total": 12,
+        "hallucinations": 1,
+        "predictedNonEmpty": 8
+      },
+      "intent": {
+        "correct": 11,
+        "total": 12,
+        "hallucinations": 0,
+        "predictedNonEmpty": 7
+      },
+      "urgency": {
+        "correct": 11,
+        "total": 12,
+        "hallucinations": 1,
+        "predictedNonEmpty": 6
+      },
+      "propertyType": {
+        "correct": 10,
+        "total": 12,
+        "hallucinations": 1,
+        "predictedNonEmpty": 8
+      },
+      "timeline": {
+        "correct": 9,
+        "total": 12,
+        "hallucinations": 3,
+        "predictedNonEmpty": 6
+      }
+    },
+    "wrong": [
+      {
+        "conversation": "c02_jaksel_rent_medium",
+        "field": "propertyType"
+      },
+      {
+        "conversation": "c02_jaksel_rent_medium",
+        "field": "timeline"
+      },
+      {
+        "conversation": "c03_sg_buy_condo_lowurgency",
+        "field": "timeline"
+      },
+      {
+        "conversation": "c04_bsd_rent_house_asap",
+        "field": "areas"
+      },
+      {
+        "conversation": "c05_jkt_buy_apartment_seller_nego",
+        "field": "timeline"
+      },
+      {
+        "conversation": "c08_sparse_general_inquiry",
+        "field": "propertyType"
+      },
+      {
+        "conversation": "c11_adversarial_agent_states_budget",
+        "field": "intent"
+      },
+      {
+        "conversation": "c12_adversarial_friend_budget",
+        "field": "urgency"
+      }
+    ]
+  }
 }

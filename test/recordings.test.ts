@@ -76,16 +76,12 @@ describe("the scenario recording", () => {
     }
   });
 
-  it("backs the Singapore note: the writer gets IDR 1.5 billion, the check holds the draft for Tampines", () => {
+  it("backs the Singapore note: the budget stays empty with both models, and the drafts pass", () => {
     const s = scenario("singapore-budget");
     for (const model of recording.models) {
-      const draft = recording.scenarios[s.id][model].draft;
-      expect(draft?.input.profile.budgetIDR).toBe(1_500_000_000);
+      expect(recording.scenarios[s.id][model].draft?.input.profile.budgetIDR).toBeNull();
       const sim = runSimulation(s, agentOf(s), s.steps.length - 1, outputsFor(recording, s, model));
-      expect(sim.draft).toMatchObject({
-        status: "written",
-        verdict: { passed: false, violations: ['area "Tampines" not present in the lead profile'] },
-      });
+      expect(sim.draft).toMatchObject({ status: "written", verdict: { passed: true, violations: [] } });
     }
   });
 
@@ -114,7 +110,7 @@ describe("the hand review of the eval", () => {
     facts: { model: string; conversation: string; field: string; category: string; why: string }[];
   };
 
-  it("covers exactly the facts the scorer marks wrong, and says which were left empty", async () => {
+  it("covers every fact the scorer marks wrong, says which were left empty, and which my fixes made right", async () => {
     expect(review.recording).toBe(evalFile);
     const reviewed = new Map(review.facts.map((f) => [`${f.model} ${f.conversation} ${f.field}`, f]));
     expect(reviewed.size).toBe(review.facts.length);
@@ -124,9 +120,13 @@ describe("the hand review of the eval", () => {
       const report = await scoreRun(model, evalItems(recording, model));
       for (const c of report.perConversation) {
         for (const field of FIELDS) {
-          if (c.fieldMatches[field]) continue;
-          wrong += 1;
           const fact = reviewed.get(`${model} ${c.id} ${field}`);
+          if (c.fieldMatches[field]) {
+            // A reviewed fact that is right today was made right by a fix to my code.
+            if (fact) expect(fact.category, `${model} ${c.id} ${field}`).toBe("fixed");
+            continue;
+          }
+          wrong += 1;
           expect(fact, `${model} ${c.id} ${field} is not reviewed`).toBeDefined();
           const empty = field === "areas" ? c.predicted.areas.length === 0 : [null, "unknown"].includes(c.predicted[field] as string | null);
           expect(fact?.category === "missed", `${model} ${c.id} ${field}`).toBe(empty);
@@ -135,7 +135,7 @@ describe("the hand review of the eval", () => {
         }
       }
     }
-    expect(wrong).toBe(review.facts.length);
+    expect(wrong).toBe(review.facts.filter((f) => f.category !== "fixed").length);
   });
 
   it("is right that the rule-based stage, not the model, gave the friend's purchase as intent", () => {
@@ -145,28 +145,47 @@ describe("the hand review of the eval", () => {
     }
   });
 
-  it("is right that the guardrail threw out a true area in c07", () => {
+  it("leaves one really wrong fact under the word rule, the rest translations, extra places or debatable labels", async () => {
+    const kinds: string[] = [];
+    for (const model of recording.models) {
+      const report = await scoreRun(model, evalItems(recording, model));
+      for (const w of report.byWords.wrong) {
+        const c = report.perConversation.find((x) => x.id === w.conversation)!;
+        const empty = w.field === "areas" ? c.predicted.areas.length === 0 : [null, "unknown"].includes(c.predicted[w.field] as string | null);
+        if (empty) continue;
+        const fact = review.facts.find((f) => f.model === model && f.conversation === w.conversation && f.field === w.field);
+        expect(fact, `${model} ${w.conversation} ${w.field}`).toBeDefined();
+        kinds.push(`${fact!.category}`);
+      }
+    }
+    expect(kinds.filter((k) => k === "wrong")).toHaveLength(1);
+    expect(kinds.every((k) => ["wrong", "right", "debatable"].includes(k))).toBe(true);
+  });
+
+  it("c07: the quote check now keeps both areas the lead named in one quote", () => {
     const recorded = recording.eval["cx/gpt-6-luna"]["c07_multi_area_rent_apartment"];
     if (!recorded.ok) throw new Error("expected a readable reply");
-    expect(recorded.extraction.areas.value).toEqual(["BSD", "Alam Sutera"]);
+    expect(recorded.extraction.areas.citations).toHaveLength(1);
     const conversation = evalItems(recording, "cx/gpt-6-luna").find((i) => i.conversation.id === "c07_multi_area_rent_apartment")!.conversation;
-    expect(applyGuardrail(recorded.extraction, conversation).violations).toEqual([
-      { field: "areas[1]", reason: "missing_citation", citation: null },
-    ]);
+    const result = applyGuardrail(recorded.extraction, conversation);
+    expect(result.profile.areas).toEqual(["BSD", "Alam Sutera"]);
+    expect(result.violations).toEqual([]);
   });
 });
 
 describe("the README", () => {
-  it("quotes the published results", async () => {
+  it("quotes the published results, before and after the fixes and by the word rule", () => {
     const readme = read("README.md");
-    const recording = loadRecording(read(evalFile));
-    const names: Record<string, string> = { "cx/gpt-6-luna": "GPT-6 Luna", "ag/gemini-3.8-flash": "Gemini 3.8 Flash" };
-    for (const model of recording.models) {
-      const report = await scoreRun(model, evalItems(recording, model));
-      const filled = FIELDS.reduce((n, f) => n + report.perField[f].predictedNonEmpty, 0);
-      const wrong = FIELDS.reduce((n, f) => n + report.perField[f].hallucinations, 0);
-      const rate = (report.overall.hallucinationRate * 100).toFixed(1);
-      expect(readme).toContain(`| ${names[model]} | ${filled} | ${wrong} | ${rate}% |`);
+    const names: Record<string, string> = { "gpt-6-luna": "GPT-6 Luna", "gemini-3.8-flash": "Gemini 3.8 Flash" };
+    const cell = (perField: Record<string, { hallucinations: number; predictedNonEmpty: number }>) => {
+      const wrong = Object.values(perField).reduce((n, f) => n + f.hallucinations, 0);
+      const filled = Object.values(perField).reduce((n, f) => n + f.predictedNonEmpty, 0);
+      return `${wrong} of ${filled} (${((wrong / filled) * 100).toFixed(1)}%)`;
+    };
+    for (const name of Object.keys(names)) {
+      const before = json(`eval/results/before-fixes/2026-10-14-${name}.json`) as { perField: Record<string, { hallucinations: number; predictedNonEmpty: number }> };
+      const after = json(`eval/results/2026-10-14-${name}.json`) as { perField: Record<string, { hallucinations: number; predictedNonEmpty: number }>; byWords: { perField: Record<string, { hallucinations: number; predictedNonEmpty: number }> } };
+      expect(readme).toContain(`| ${names[name]} | ${cell(before.perField)} | ${cell(after.perField)} | ${cell(after.byWords.perField)} |`);
     }
   });
 
