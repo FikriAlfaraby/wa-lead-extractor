@@ -1,0 +1,195 @@
+{
+  "recording": "eval/recordings/2026-10-14-eval.json",
+  "method": "Each fact read against its conversation. The reason for every call is written next to it, so each one can be checked.",
+  "categories": {
+    "right": "Right, in other words or with more or less detail than the key",
+    "debatable": "The answer key itself is debatable",
+    "guardrail": "True, but the guardrail threw part of it out",
+    "wrong": "Really wrong",
+    "missed": "Left empty where the key has a value (not counted as a hallucination)"
+  },
+  "facts": [
+    {
+      "model": "cx/gpt-6-luna",
+      "conversation": "c01_bsd_buy_urgent",
+      "field": "areas",
+      "category": "right",
+      "why": "BSD City is the full name of BSD."
+    },
+    {
+      "model": "cx/gpt-6-luna",
+      "conversation": "c01_bsd_buy_urgent",
+      "field": "propertyType",
+      "category": "right",
+      "why": "“Rumah tinggal” is a house to live in; the key says “rumah”, a house."
+    },
+    {
+      "model": "cx/gpt-6-luna",
+      "conversation": "c02_jaksel_rent_medium",
+      "field": "propertyType",
+      "category": "right",
+      "why": "“Apartemen studio”, in English."
+    },
+    {
+      "model": "cx/gpt-6-luna",
+      "conversation": "c02_jaksel_rent_medium",
+      "field": "timeline",
+      "category": "debatable",
+      "why": "The lead said the moving date is not decided yet (“masih blm pasti”). The key leaves the field empty; the model fills it with that. Nothing false either way."
+    },
+    {
+      "model": "cx/gpt-6-luna",
+      "conversation": "c03_sg_buy_condo_lowurgency",
+      "field": "timeline",
+      "category": "right",
+      "why": "“Tahun depan”, in English."
+    },
+    {
+      "model": "cx/gpt-6-luna",
+      "conversation": "c04_bsd_rent_house_asap",
+      "field": "areas",
+      "category": "right",
+      "why": "The lead also named De Park, a cluster in BSD; the key lists BSD only."
+    },
+    {
+      "model": "cx/gpt-6-luna",
+      "conversation": "c04_bsd_rent_house_asap",
+      "field": "propertyType",
+      "category": "right",
+      "why": "A rented house with three bedrooms, as the lead wrote; the key says “rumah”."
+    },
+    {
+      "model": "cx/gpt-6-luna",
+      "conversation": "c05_jkt_buy_apartment_seller_nego",
+      "field": "timeline",
+      "category": "wrong",
+      "why": "“Weekend ini bisa” is when the lead can view the unit, not when they will buy."
+    },
+    {
+      "model": "cx/gpt-6-luna",
+      "conversation": "c07_multi_area_rent_apartment",
+      "field": "areas",
+      "category": "guardrail",
+      "why": "The model found both areas but gave one quote for the two; the guardrail wants a quote per area and threw Alam Sutera out."
+    },
+    {
+      "model": "cx/gpt-6-luna",
+      "conversation": "c07_multi_area_rent_apartment",
+      "field": "propertyType",
+      "category": "right",
+      "why": "The chat is about an apartment; “1BR” leaves out the word."
+    },
+    {
+      "model": "cx/gpt-6-luna",
+      "conversation": "c08_sparse_general_inquiry",
+      "field": "propertyType",
+      "category": "missed",
+      "why": "The lead asked whether houses are still for sale; the model left the type empty."
+    },
+    {
+      "model": "cx/gpt-6-luna",
+      "conversation": "c11_adversarial_agent_states_budget",
+      "field": "intent",
+      "category": "missed",
+      "why": "The lead asked whether the unit is for sale; the model left the intent empty."
+    },
+    {
+      "model": "cx/gpt-6-luna",
+      "conversation": "c11_adversarial_agent_states_budget",
+      "field": "propertyType",
+      "category": "right",
+      "why": "The lead wrote “2BR”; the key adds “apartemen”."
+    },
+    {
+      "model": "cx/gpt-6-luna",
+      "conversation": "c12_adversarial_friend_budget",
+      "field": "intent",
+      "category": "wrong",
+      "why": "From the rule-based stage, not the model: “temen gue kmrn baru beli rumah” (my friend just bought a house) matches its keyword “beli rumah”."
+    },
+    {
+      "model": "cx/gpt-6-luna",
+      "conversation": "c12_adversarial_friend_budget",
+      "field": "urgency",
+      "category": "debatable",
+      "why": "The lead says they are still just looking. The key leaves urgency unknown here, but marks a lead who is still comparing (“masih compare2”, c05) as low."
+    },
+    {
+      "model": "ag/gemini-3.8-flash",
+      "conversation": "c01_bsd_buy_urgent",
+      "field": "areas",
+      "category": "right",
+      "why": "BSD and BSD City are one place, listed twice."
+    },
+    {
+      "model": "ag/gemini-3.8-flash",
+      "conversation": "c01_bsd_buy_urgent",
+      "field": "propertyType",
+      "category": "right",
+      "why": "“Rumah tinggal” is a house to live in; the key says “rumah”, a house."
+    },
+    {
+      "model": "ag/gemini-3.8-flash",
+      "conversation": "c02_jaksel_rent_medium",
+      "field": "urgency",
+      "category": "debatable",
+      "why": "The lead says they are still just looking. The key leaves urgency unknown here, but marks a lead who is still comparing (“masih compare2”, c05) as low."
+    },
+    {
+      "model": "ag/gemini-3.8-flash",
+      "conversation": "c02_jaksel_rent_medium",
+      "field": "timeline",
+      "category": "debatable",
+      "why": "The lead said the moving date is not decided yet (“masih blm pasti”). The key leaves the field empty; the model fills it with that. Nothing false either way."
+    },
+    {
+      "model": "ag/gemini-3.8-flash",
+      "conversation": "c04_bsd_rent_house_asap",
+      "field": "areas",
+      "category": "right",
+      "why": "The lead also named De Park, a cluster in BSD; the key lists BSD only."
+    },
+    {
+      "model": "ag/gemini-3.8-flash",
+      "conversation": "c04_bsd_rent_house_asap",
+      "field": "timeline",
+      "category": "right",
+      "why": "“Minggu ini kalo bisa” (this week if possible); the key keeps “minggu ini”."
+    },
+    {
+      "model": "ag/gemini-3.8-flash",
+      "conversation": "c07_multi_area_rent_apartment",
+      "field": "propertyType",
+      "category": "right",
+      "why": "An apartment, without the “1BR” the lead gave later."
+    },
+    {
+      "model": "ag/gemini-3.8-flash",
+      "conversation": "c11_adversarial_agent_states_budget",
+      "field": "intent",
+      "category": "missed",
+      "why": "The lead asked whether the unit is for sale; the model left the intent empty."
+    },
+    {
+      "model": "ag/gemini-3.8-flash",
+      "conversation": "c11_adversarial_agent_states_budget",
+      "field": "propertyType",
+      "category": "right",
+      "why": "The lead wrote “2BR”; the key adds “apartemen”."
+    },
+    {
+      "model": "ag/gemini-3.8-flash",
+      "conversation": "c12_adversarial_friend_budget",
+      "field": "intent",
+      "category": "wrong",
+      "why": "From the rule-based stage, not the model: “temen gue kmrn baru beli rumah” (my friend just bought a house) matches its keyword “beli rumah”."
+    },
+    {
+      "model": "ag/gemini-3.8-flash",
+      "conversation": "c12_adversarial_friend_budget",
+      "field": "urgency",
+      "category": "debatable",
+      "why": "The lead says they are still just looking. The key leaves urgency unknown here, but marks a lead who is still comparing (“masih compare2”, c05) as low."
+    }
+  ]
+}

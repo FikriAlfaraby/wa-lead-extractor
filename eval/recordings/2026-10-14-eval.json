@@ -1,0 +1,788 @@
+{
+  "recordedAt": "2026-10-14T09:08:23.433Z",
+  "gateway": "9router (OpenAI-compatible gateway)",
+  "models": [
+    "cx/gpt-6-luna",
+    "ag/gemini-3.8-flash"
+  ],
+  "eval": {
+    "cx/gpt-6-luna": {
+      "c01_bsd_buy_urgent": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": null,
+            "citation": null
+          },
+          "areas": {
+            "value": [
+              "BSD City"
+            ],
+            "citations": [
+              "BSD City area sini"
+            ]
+          },
+          "intent": {
+            "value": "buy",
+            "citation": "saya mau beli ya bukan sewa"
+          },
+          "urgency": {
+            "value": "high",
+            "citation": "bulan ini kalo bisa gan, soalnya kontrakan lama abis"
+          },
+          "propertyType": {
+            "value": "rumah tinggal",
+            "citation": "buat rumah tinggal"
+          },
+          "timeline": {
+            "value": "bulan ini",
+            "citation": "bulan ini kalo bisa gan, soalnya kontrakan lama abis"
+          }
+        }
+      },
+      "c02_jaksel_rent_medium": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": 15000000,
+            "citation": "15jt an per bulan"
+          },
+          "areas": {
+            "value": [
+              "Jaksel"
+            ],
+            "citations": [
+              "daerah Jaksel"
+            ]
+          },
+          "intent": {
+            "value": "rent",
+            "citation": "sewa"
+          },
+          "urgency": {
+            "value": "unknown",
+            "citation": "kapan mau pindah masih blm pasti, liat2 dulu aja"
+          },
+          "propertyType": {
+            "value": "studio apartment",
+            "citation": "apartemen studio"
+          },
+          "timeline": {
+            "value": "Belum pasti",
+            "citation": "kapan mau pindah masih blm pasti"
+          }
+        }
+      },
+      "c03_sg_buy_condo_lowurgency": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": 2000000000,
+            "citation": "kalo dirupiahkan kira2 2 miliar lah"
+          },
+          "areas": {
+            "value": [
+              "District 9",
+              "District 10"
+            ],
+            "citations": [
+              "District 9",
+              "10"
+            ]
+          },
+          "intent": {
+            "value": "buy",
+            "citation": "looking to buy"
+          },
+          "urgency": {
+            "value": "low",
+            "citation": "santai aja gan"
+          },
+          "propertyType": {
+            "value": "condo",
+            "citation": "condo aja bukan HDB"
+          },
+          "timeline": {
+            "value": "next year",
+            "citation": "mungkin tahun depan baru serius"
+          }
+        }
+      },
+      "c04_bsd_rent_house_asap": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": 20000000,
+            "citation": "20jt masih bs kan"
+          },
+          "areas": {
+            "value": [
+              "BSD",
+              "deket De Park"
+            ],
+            "citations": [
+              "BSD",
+              "deket De Park situ aja gan"
+            ]
+          },
+          "intent": {
+            "value": "rent",
+            "citation": "rumah kontrakan"
+          },
+          "urgency": {
+            "value": "high",
+            "citation": "asap bgt gan, minggu ini kalo bisa krn kontrakan skrg abis"
+          },
+          "propertyType": {
+            "value": "rumah kontrakan 3KT",
+            "citation": "rumah kontrakan BSD ga yg 3kt"
+          },
+          "timeline": {
+            "value": "minggu ini",
+            "citation": "minggu ini kalo bisa"
+          }
+        }
+      },
+      "c05_jkt_buy_apartment_seller_nego": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": 900000000,
+            "citation": "Rp 900 juta paling mentok"
+          },
+          "areas": {
+            "value": [
+              "Kemang"
+            ],
+            "citations": [
+              "area kemang aja sih maunya"
+            ]
+          },
+          "intent": {
+            "value": "buy",
+            "citation": "boleh, ini beli ya bukan sewa"
+          },
+          "urgency": {
+            "value": "low",
+            "citation": "ga buru2 juga sih nyarinya"
+          },
+          "propertyType": {
+            "value": "apartemen",
+            "citation": "unit apartemen"
+          },
+          "timeline": {
+            "value": "weekend ini",
+            "citation": "weekend ini bisa"
+          }
+        }
+      },
+      "c06_jkt_land_buy_nextyear": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": 2000000000,
+            "citation": "2M an"
+          },
+          "areas": {
+            "value": [
+              "Bintaro"
+            ],
+            "citations": [
+              "tanah kavling di Bintaro"
+            ]
+          },
+          "intent": {
+            "value": "buy",
+            "citation": "ini mau beli"
+          },
+          "urgency": {
+            "value": null,
+            "citation": null
+          },
+          "propertyType": {
+            "value": "tanah kavling",
+            "citation": "tanah kavling"
+          },
+          "timeline": {
+            "value": "tahun depan",
+            "citation": "tahun depan baru mau eksekusi, taun ini ngumpulin dana dulu"
+          }
+        }
+      },
+      "c07_multi_area_rent_apartment": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": null,
+            "citation": null
+          },
+          "areas": {
+            "value": [
+              "BSD",
+              "Alam Sutera"
+            ],
+            "citations": [
+              "BSD sama Alam Sutera dua2nya lagi dipertimbangin"
+            ]
+          },
+          "intent": {
+            "value": "rent",
+            "citation": "mau cari sewa apartemen"
+          },
+          "urgency": {
+            "value": "unknown",
+            "citation": null
+          },
+          "propertyType": {
+            "value": "1BR",
+            "citation": "1BR kayanya"
+          },
+          "timeline": {
+            "value": null,
+            "citation": null
+          }
+        }
+      },
+      "c08_sparse_general_inquiry": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": null,
+            "citation": null
+          },
+          "areas": {
+            "value": [],
+            "citations": []
+          },
+          "intent": {
+            "value": null,
+            "citation": null
+          },
+          "urgency": {
+            "value": null,
+            "citation": null
+          },
+          "propertyType": {
+            "value": null,
+            "citation": null
+          },
+          "timeline": {
+            "value": null,
+            "citation": null
+          }
+        }
+      },
+      "c09_sparse_smalltalk_only": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": null,
+            "citation": null
+          },
+          "areas": {
+            "value": [],
+            "citations": []
+          },
+          "intent": {
+            "value": "unknown",
+            "citation": null
+          },
+          "urgency": {
+            "value": "unknown",
+            "citation": null
+          },
+          "propertyType": {
+            "value": null,
+            "citation": null
+          },
+          "timeline": {
+            "value": null,
+            "citation": null
+          }
+        }
+      },
+      "c10_sparse_voicenote_dropoff": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": null,
+            "citation": null
+          },
+          "areas": {
+            "value": [],
+            "citations": []
+          },
+          "intent": {
+            "value": null,
+            "citation": null
+          },
+          "urgency": {
+            "value": null,
+            "citation": null
+          },
+          "propertyType": {
+            "value": null,
+            "citation": null
+          },
+          "timeline": {
+            "value": null,
+            "citation": null
+          }
+        }
+      },
+      "c11_adversarial_agent_states_budget": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": null,
+            "citation": null
+          },
+          "areas": {
+            "value": [
+              "Alam Sutera"
+            ],
+            "citations": [
+              "di Alam Sutera"
+            ]
+          },
+          "intent": {
+            "value": null,
+            "citation": null
+          },
+          "urgency": {
+            "value": null,
+            "citation": null
+          },
+          "propertyType": {
+            "value": "2BR",
+            "citation": "2BR"
+          },
+          "timeline": {
+            "value": null,
+            "citation": null
+          }
+        }
+      },
+      "c12_adversarial_friend_budget": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": null,
+            "citation": null
+          },
+          "areas": {
+            "value": [],
+            "citations": []
+          },
+          "intent": {
+            "value": "unknown",
+            "citation": null
+          },
+          "urgency": {
+            "value": "low",
+            "citation": "kalo gue sih belom mikir jauh2, msh liat2 aja dulu skrg"
+          },
+          "propertyType": {
+            "value": null,
+            "citation": null
+          },
+          "timeline": {
+            "value": null,
+            "citation": null
+          }
+        }
+      }
+    },
+    "ag/gemini-3.8-flash": {
+      "c01_bsd_buy_urgent": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": 1500000000,
+            "citation": "budget saya sekitar 1.5M all-in udah termasuk pajak"
+          },
+          "areas": {
+            "value": [
+              "BSD",
+              "BSD City"
+            ],
+            "citations": [
+              "BSD",
+              "BSD City"
+            ]
+          },
+          "intent": {
+            "value": "buy",
+            "citation": "saya mau beli ya bukan sewa"
+          },
+          "urgency": {
+            "value": "high",
+            "citation": "bulan ini kalo bisa gan, soalnya kontrakan lama abis"
+          },
+          "propertyType": {
+            "value": "rumah tinggal",
+            "citation": "rumah tinggal"
+          },
+          "timeline": {
+            "value": "bulan ini",
+            "citation": "bulan ini kalo bisa gan"
+          }
+        }
+      },
+      "c02_jaksel_rent_medium": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": 15000000,
+            "citation": "15jt an per bulan"
+          },
+          "areas": {
+            "value": [
+              "Jaksel"
+            ],
+            "citations": [
+              "Jaksel"
+            ]
+          },
+          "intent": {
+            "value": "rent",
+            "citation": "sewa"
+          },
+          "urgency": {
+            "value": "low",
+            "citation": "liat2 dulu aja"
+          },
+          "propertyType": {
+            "value": "apartemen studio",
+            "citation": "apartemen studio"
+          },
+          "timeline": {
+            "value": "masih blm pasti",
+            "citation": "masih blm pasti"
+          }
+        }
+      },
+      "c03_sg_buy_condo_lowurgency": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": 2000000000,
+            "citation": "2 miliar"
+          },
+          "areas": {
+            "value": [
+              "District 9",
+              "District 10"
+            ],
+            "citations": [
+              "District 9",
+              "10"
+            ]
+          },
+          "intent": {
+            "value": "buy",
+            "citation": "looking to buy"
+          },
+          "urgency": {
+            "value": "low",
+            "citation": "santai aja gan"
+          },
+          "propertyType": {
+            "value": "condo",
+            "citation": "condo"
+          },
+          "timeline": {
+            "value": "tahun depan",
+            "citation": "tahun depan"
+          }
+        }
+      },
+      "c04_bsd_rent_house_asap": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": 20000000,
+            "citation": "20jt"
+          },
+          "areas": {
+            "value": [
+              "BSD",
+              "De Park"
+            ],
+            "citations": [
+              "BSD",
+              "De Park"
+            ]
+          },
+          "intent": {
+            "value": "rent",
+            "citation": "kontrakan"
+          },
+          "urgency": {
+            "value": "high",
+            "citation": "asap bgt gan"
+          },
+          "propertyType": {
+            "value": "rumah",
+            "citation": "rumah"
+          },
+          "timeline": {
+            "value": "minggu ini kalo bisa",
+            "citation": "minggu ini kalo bisa"
+          }
+        }
+      },
+      "c05_jkt_buy_apartment_seller_nego": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": 900000000,
+            "citation": "Rp 900 juta paling mentok"
+          },
+          "areas": {
+            "value": [
+              "Kemang"
+            ],
+            "citations": [
+              "Kemang"
+            ]
+          },
+          "intent": {
+            "value": "buy",
+            "citation": "beli ya bukan sewa"
+          },
+          "urgency": {
+            "value": "low",
+            "citation": "ga buru2 juga sih nyarinya"
+          },
+          "propertyType": {
+            "value": "apartemen",
+            "citation": "apartemen"
+          },
+          "timeline": {
+            "value": null,
+            "citation": null
+          }
+        }
+      },
+      "c06_jkt_land_buy_nextyear": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": 2000000000,
+            "citation": "2M an"
+          },
+          "areas": {
+            "value": [
+              "Bintaro"
+            ],
+            "citations": [
+              "Bintaro"
+            ]
+          },
+          "intent": {
+            "value": "buy",
+            "citation": "ini mau beli"
+          },
+          "urgency": {
+            "value": "low",
+            "citation": "tahun depan baru mau eksekusi"
+          },
+          "propertyType": {
+            "value": "tanah kavling",
+            "citation": "tanah kavling"
+          },
+          "timeline": {
+            "value": "tahun depan",
+            "citation": "tahun depan"
+          }
+        }
+      },
+      "c07_multi_area_rent_apartment": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": null,
+            "citation": null
+          },
+          "areas": {
+            "value": [
+              "BSD",
+              "Alam Sutera"
+            ],
+            "citations": [
+              "BSD",
+              "Alam Sutera"
+            ]
+          },
+          "intent": {
+            "value": "rent",
+            "citation": "sewa"
+          },
+          "urgency": {
+            "value": null,
+            "citation": null
+          },
+          "propertyType": {
+            "value": "apartemen",
+            "citation": "apartemen"
+          },
+          "timeline": {
+            "value": null,
+            "citation": null
+          }
+        }
+      },
+      "c08_sparse_general_inquiry": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": null,
+            "citation": null
+          },
+          "areas": {
+            "value": [],
+            "citations": []
+          },
+          "intent": {
+            "value": null,
+            "citation": null
+          },
+          "urgency": {
+            "value": null,
+            "citation": null
+          },
+          "propertyType": {
+            "value": "rumah",
+            "citation": "rumah"
+          },
+          "timeline": {
+            "value": null,
+            "citation": null
+          }
+        }
+      },
+      "c09_sparse_smalltalk_only": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": null,
+            "citation": null
+          },
+          "areas": {
+            "value": [],
+            "citations": []
+          },
+          "intent": {
+            "value": null,
+            "citation": null
+          },
+          "urgency": {
+            "value": null,
+            "citation": null
+          },
+          "propertyType": {
+            "value": null,
+            "citation": null
+          },
+          "timeline": {
+            "value": null,
+            "citation": null
+          }
+        }
+      },
+      "c10_sparse_voicenote_dropoff": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": null,
+            "citation": null
+          },
+          "areas": {
+            "value": [],
+            "citations": []
+          },
+          "intent": {
+            "value": null,
+            "citation": null
+          },
+          "urgency": {
+            "value": null,
+            "citation": null
+          },
+          "propertyType": {
+            "value": null,
+            "citation": null
+          },
+          "timeline": {
+            "value": null,
+            "citation": null
+          }
+        }
+      },
+      "c11_adversarial_agent_states_budget": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": null,
+            "citation": null
+          },
+          "areas": {
+            "value": [
+              "Alam Sutera"
+            ],
+            "citations": [
+              "Alam Sutera"
+            ]
+          },
+          "intent": {
+            "value": null,
+            "citation": null
+          },
+          "urgency": {
+            "value": null,
+            "citation": null
+          },
+          "propertyType": {
+            "value": "2BR",
+            "citation": "2BR"
+          },
+          "timeline": {
+            "value": null,
+            "citation": null
+          }
+        }
+      },
+      "c12_adversarial_friend_budget": {
+        "ok": true,
+        "extraction": {
+          "budgetIDR": {
+            "value": null,
+            "citation": null
+          },
+          "areas": {
+            "value": [],
+            "citations": []
+          },
+          "intent": {
+            "value": null,
+            "citation": null
+          },
+          "urgency": {
+            "value": "low",
+            "citation": "belom mikir jauh2, msh liat2 aja dulu skrg"
+          },
+          "propertyType": {
+            "value": null,
+            "citation": null
+          },
+          "timeline": {
+            "value": null,
+            "citation": null
+          }
+        }
+      }
+    }
+  },
+  "scenarios": {}
+}

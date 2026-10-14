@@ -190,8 +190,36 @@ accuracy that occasionally invents a budget; a fabricated "urgent" tag
 drives a real, bad sales action. The harness exits non-zero above 0%
 hallucination, as a regression gate.
 
-The last recorded run is kept in `eval/results/2026-07-05-deepseek-v4-flash.json`: accuracy 83.3%,
-hallucination rate 26.7% (12 of 45 filled fields wrong), so it fails the gate. New runs write
+**Record once, score offline.** `eval/record.ts` calls the real prompts and keeps every model
+reply in `eval/recordings/`; `eval/score-recording.ts` scores a recording with no network, through
+the same `runPipeline` the product uses. A test re-scores every recording and must reproduce the
+published results, so the numbers cannot drift from the evidence.
+
+Recorded 14 Oct 2026 through an OpenAI-compatible gateway:
+
+| Model | Filled fields | Counted wrong | Hallucination rate |
+|---|---:|---:|---:|
+| GPT-6 Luna | 42 | 13 | 31.0% |
+| Gemini 3.8 Flash | 43 | 10 | 23.3% |
+
+Both fail the 0% gate. Each fact the scorer counts wrong is reviewed against its conversation
+in `eval/review/2026-10-14.json` (a test keeps the review in step with the scorer). Of Luna's
+13, 8 are the right fact in other words, 2 are debatable labels, 1 is a true area the
+guardrail threw out, and 2 are really wrong; of Gemini's 10, 6 are right in other words,
+3 are debatable and 1 is really wrong. The scorer compares free text exactly ("rumah tinggal" is
+not "rumah"), so the rate mostly measures wording. The defects the review found:
+
+- **The rule-based stage reads a friend's purchase as the lead's intent** (c12): "temen gue kmrn
+  baru beli rumah" (my friend just bought a house) matches the keyword "beli rumah".
+- **Luna took a viewing day for a moving date** (c05): "weekend ini bisa".
+- **The guardrail threw out a true area** (c07): one quote named two areas, and it wants one quote
+  per area.
+- **Singapore money is read the Indonesian way**: "1.5M" (S$1.5 million) becomes IDR 1.5 billion
+  and reaches the draft (the simulator's Singapore scenario; both models had left it empty).
+- **The draft check raises false alarms**: a "10-minute call", and "Tampines" inside "Tampines MRT".
+
+The July run (`eval/results/2026-07-05-deepseek-v4-flash.json`, 26.7%) kept only the scores, not
+the replies, so it cannot be reviewed the same way. `npm run eval` still runs live and writes
 `eval/report.json`, which is not committed.
 
 **Message-quality evals** (`eval/run-message-eval.ts`, new): runs
@@ -226,7 +254,16 @@ extraction eval.
 
 ## 6. Product surface: the Pipeline Simulator and approval queue
 
-`ui/` now opens on **Live demo**, a real interactive chat against the
+The simulator runs on [fikrialfaraby.com/wa-lead](https://fikrialfaraby.com/wa-lead/), built
+with `npm run build:embed` in `ui/`. Its conversations are written by hand
+(`data/scenarios.json`); every model answer it shows is a recorded reply
+(`eval/recordings/2026-10-14-scenarios.json`), from either model, or a wrong answer written by
+hand and labelled as such, to show what the guardrail does with a mistake the models did not make.
+The deterministic stages replay it in the browser through `src/replay.ts`, the same code the
+recorder uses to compute the writer's input. A lead who says stop gets no draft: the writer is never
+told, so a gate in `qualify.ts` stops it.
+
+`ui/` also has a **Live demo**, a real interactive chat against the
 Worker's `/api/analyze` and `/api/draft` endpoints — type as the lead (or
 click a suggested message) and watch actual LLM extraction, the citation
 guardrail, and the qualification state machine run server-side, with a
@@ -325,11 +362,19 @@ LLM_API_KEY=sk-... \
 LLM_MODEL=gpt-4o-mini \
 npm run eval:messages
 
+# record real replies once, then score them with no network
+LLM_API_KEY=sk-... LLM_MODELS=gpt-4o-mini RECORD_PARTS=eval \
+npm run record -- eval/recordings/<date>-eval.json
+npm run score -- eval/recordings/<date>-eval.json
+
+npm run lint     # ESLint, zero warnings
+
 # approval-queue UI (separate package, own deps)
 cd ui
 npm install
 npm run dev      # local dev server
 npm run build    # production build, verified in CI
+npm run build:embed  # the simulator alone, for the site
 ```
 
 `LLM_BASE_URL` can point at any OpenAI-compatible chat completions gateway

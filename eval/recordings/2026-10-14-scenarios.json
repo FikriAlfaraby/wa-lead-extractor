@@ -1,0 +1,488 @@
+{
+  "recordedAt": "2026-10-14T09:14:31.950Z",
+  "gateway": "9router (OpenAI-compatible gateway)",
+  "models": [
+    "cx/gpt-6-luna",
+    "ag/gemini-3.8-flash"
+  ],
+  "eval": {},
+  "scenarios": {
+    "clear-buyer": {
+      "cx/gpt-6-luna": {
+        "extraction": {
+          "ok": true,
+          "extraction": {
+            "budgetIDR": {
+              "value": 1500000000,
+              "citation": "budget 1.5M all in kak, udah sama BPHTB"
+            },
+            "areas": {
+              "value": [
+                "BSD",
+                "deket AEON BSD"
+              ],
+              "citations": [
+                "rumah di BSD",
+                "deket AEON BSD aja kak"
+              ]
+            },
+            "intent": {
+              "value": "buy",
+              "citation": "saya mau beli ya, bukan sewa"
+            },
+            "urgency": {
+              "value": "high",
+              "citation": "urgent kak"
+            },
+            "propertyType": {
+              "value": "rumah",
+              "citation": "rumah di BSD"
+            },
+            "timeline": {
+              "value": "bulan depan",
+              "citation": "harus udah pindah bulan depan"
+            }
+          }
+        },
+        "draft": {
+          "ok": true,
+          "writer": "cx/gpt-6-luna",
+          "input": {
+            "profile": {
+              "budgetIDR": 1500000000,
+              "areas": [
+                "BSD",
+                "deket AEON BSD"
+              ],
+              "intent": "buy",
+              "urgency": "high",
+              "propertyType": "rumah",
+              "timeline": "bulan depan"
+            },
+            "leadState": "warm"
+          },
+          "output": {
+            "message": "Siap, saya catat Anda mencari rumah di BSD atau dekat AEON BSD dengan budget Rp1,5 miliar, rencana beli bulan depan, dan kebutuhan yang cukup mendesak. Boleh saya mulai carikan opsi yang sesuai? Salam, Budi",
+            "factsUsed": [
+              "budget: 1500000000 IDR",
+              "areas: BSD, deket AEON BSD",
+              "intent: buy",
+              "urgency: high",
+              "property type: rumah",
+              "timeline: bulan depan"
+            ]
+          }
+        }
+      },
+      "ag/gemini-3.8-flash": {
+        "extraction": {
+          "ok": true,
+          "extraction": {
+            "budgetIDR": {
+              "value": 1500000000,
+              "citation": "budget 1.5M"
+            },
+            "areas": {
+              "value": [
+                "BSD",
+                "AEON BSD"
+              ],
+              "citations": [
+                "BSD",
+                "AEON BSD"
+              ]
+            },
+            "intent": {
+              "value": "buy",
+              "citation": "beli"
+            },
+            "urgency": {
+              "value": "high",
+              "citation": "urgent"
+            },
+            "propertyType": {
+              "value": "rumah",
+              "citation": "rumah"
+            },
+            "timeline": {
+              "value": "bulan depan",
+              "citation": "bulan depan"
+            }
+          }
+        },
+        "draft": {
+          "ok": true,
+          "writer": "ag/gemini-3.8-flash",
+          "input": {
+            "profile": {
+              "budgetIDR": 1500000000,
+              "areas": [
+                "BSD",
+                "AEON BSD"
+              ],
+              "intent": "buy",
+              "urgency": "high",
+              "propertyType": "rumah",
+              "timeline": "bulan depan"
+            },
+            "leadState": "warm"
+          },
+          "output": {
+            "message": "Halo, untuk rencana beli rumah di BSD dengan budget 1,5 miliar IDR buat bulan depan, bisa kita jadwalkan telepon singkat hari ini? Salam, Budi",
+            "factsUsed": [
+              "intent: buy",
+              "property type: rumah",
+              "areas: BSD, AEON BSD",
+              "budget: 1500000000 IDR",
+              "timeline: bulan depan"
+            ]
+          }
+        }
+      }
+    },
+    "agent-floats-budget": {
+      "hand-made": {
+        "extraction": null,
+        "draft": {
+          "ok": true,
+          "writer": "cx/gpt-6-luna",
+          "input": {
+            "profile": {
+              "budgetIDR": null,
+              "areas": [
+                "District 9"
+              ],
+              "intent": "buy",
+              "urgency": "unknown",
+              "propertyType": "2-bedder",
+              "timeline": null
+            },
+            "leadState": "warm"
+          },
+          "output": {
+            "message": "Hi! I’m following up on your search to buy a 2-bedder in District 9. Would you be available for a quick call to discuss what you’re looking for? Best, Amelia",
+            "factsUsed": [
+              "areas: District 9",
+              "intent: buy",
+              "property type: 2-bedder"
+            ]
+          }
+        }
+      },
+      "cx/gpt-6-luna": {
+        "extraction": {
+          "ok": true,
+          "extraction": {
+            "budgetIDR": {
+              "value": null,
+              "citation": null
+            },
+            "areas": {
+              "value": [
+                "District 9"
+              ],
+              "citations": [
+                "at District 9"
+              ]
+            },
+            "intent": {
+              "value": "unknown",
+              "citation": null
+            },
+            "urgency": {
+              "value": "unknown",
+              "citation": null
+            },
+            "propertyType": {
+              "value": "2-bedder",
+              "citation": "2-bedder"
+            },
+            "timeline": {
+              "value": null,
+              "citation": null
+            }
+          }
+        },
+        "draft": {
+          "ok": true,
+          "writer": "cx/gpt-6-luna",
+          "input": {
+            "profile": {
+              "budgetIDR": null,
+              "areas": [
+                "District 9"
+              ],
+              "intent": "unknown",
+              "urgency": "unknown",
+              "propertyType": "2-bedder",
+              "timeline": null
+            },
+            "leadState": "warm"
+          },
+          "output": {
+            "message": "Hi! Shall we arrange a quick call to discuss 2-bedder options in District 9? Best, Amelia",
+            "factsUsed": [
+              "areas: District 9",
+              "property type: 2-bedder"
+            ]
+          }
+        }
+      },
+      "ag/gemini-3.8-flash": {
+        "extraction": {
+          "ok": true,
+          "extraction": {
+            "budgetIDR": {
+              "value": null,
+              "citation": null
+            },
+            "areas": {
+              "value": [
+                "District 9"
+              ],
+              "citations": [
+                "District 9"
+              ]
+            },
+            "intent": {
+              "value": null,
+              "citation": null
+            },
+            "urgency": {
+              "value": null,
+              "citation": null
+            },
+            "propertyType": {
+              "value": "2-bedder",
+              "citation": "2-bedder"
+            },
+            "timeline": {
+              "value": null,
+              "citation": null
+            }
+          }
+        },
+        "draft": {
+          "ok": true,
+          "writer": "ag/gemini-3.8-flash",
+          "input": {
+            "profile": {
+              "budgetIDR": null,
+              "areas": [
+                "District 9"
+              ],
+              "intent": "unknown",
+              "urgency": "unknown",
+              "propertyType": "2-bedder",
+              "timeline": null
+            },
+            "leadState": "warm"
+          },
+          "output": {
+            "message": "Hi, hope your week is going well! Following up on your search for a 2-bedder in District 9, could we schedule a quick 10-minute call tomorrow to run through your preferences? 😊\n\nBest, Amelia",
+            "factsUsed": [
+              "areas: District 9",
+              "property type: 2-bedder"
+            ]
+          }
+        }
+      }
+    },
+    "friends-budget": {
+      "hand-made": {
+        "extraction": null,
+        "draft": null
+      },
+      "cx/gpt-6-luna": {
+        "extraction": {
+          "ok": true,
+          "extraction": {
+            "budgetIDR": {
+              "value": null,
+              "citation": null
+            },
+            "areas": {
+              "value": [],
+              "citations": []
+            },
+            "intent": {
+              "value": null,
+              "citation": null
+            },
+            "urgency": {
+              "value": "low",
+              "citation": "belom mikir jauh2"
+            },
+            "propertyType": {
+              "value": null,
+              "citation": null
+            },
+            "timeline": {
+              "value": null,
+              "citation": null
+            }
+          }
+        },
+        "draft": null
+      },
+      "ag/gemini-3.8-flash": {
+        "extraction": {
+          "ok": true,
+          "extraction": {
+            "budgetIDR": {
+              "value": null,
+              "citation": null
+            },
+            "areas": {
+              "value": [],
+              "citations": []
+            },
+            "intent": {
+              "value": null,
+              "citation": null
+            },
+            "urgency": {
+              "value": "low",
+              "citation": "belom mikir jauh2, msh liat2 aja dulu skrg"
+            },
+            "propertyType": {
+              "value": null,
+              "citation": null
+            },
+            "timeline": {
+              "value": null,
+              "citation": null
+            }
+          }
+        },
+        "draft": null
+      }
+    },
+    "singapore-budget": {
+      "cx/gpt-6-luna": {
+        "extraction": {
+          "ok": true,
+          "extraction": {
+            "budgetIDR": {
+              "value": null,
+              "citation": null
+            },
+            "areas": {
+              "value": [
+                "Tampines MRT"
+              ],
+              "citations": [
+                "near Tampines MRT would be ideal"
+              ]
+            },
+            "intent": {
+              "value": "buy",
+              "citation": "I'm looking to buy, not rent"
+            },
+            "urgency": {
+              "value": "high",
+              "citation": "quite urgent leh"
+            },
+            "propertyType": {
+              "value": "condo",
+              "citation": "saw your listing for the Tampines condo on PropertyGuru"
+            },
+            "timeline": {
+              "value": "next month",
+              "citation": "need to settle by next month"
+            }
+          }
+        },
+        "draft": {
+          "ok": true,
+          "writer": "cx/gpt-6-luna",
+          "input": {
+            "profile": {
+              "budgetIDR": 1500000000,
+              "areas": [
+                "Tampines MRT"
+              ],
+              "intent": "buy",
+              "urgency": "high",
+              "propertyType": "condo",
+              "timeline": "next month"
+            },
+            "leadState": "warm"
+          },
+          "output": {
+            "message": "Hi! Since you’re looking to buy a condo near Tampines MRT next month with a budget of IDR 1.5 billion, shall I put together a shortlist for you? Best, Amelia",
+            "factsUsed": [
+              "budget: 1500000000 IDR",
+              "areas: Tampines MRT",
+              "intent: buy",
+              "property type: condo",
+              "timeline: next month"
+            ]
+          }
+        }
+      },
+      "ag/gemini-3.8-flash": {
+        "extraction": {
+          "ok": true,
+          "extraction": {
+            "budgetIDR": {
+              "value": null,
+              "citation": null
+            },
+            "areas": {
+              "value": [
+                "Tampines MRT"
+              ],
+              "citations": [
+                "near Tampines MRT would be ideal"
+              ]
+            },
+            "intent": {
+              "value": "buy",
+              "citation": "I'm looking to buy, not rent - for own stay"
+            },
+            "urgency": {
+              "value": "high",
+              "citation": "quite urgent leh"
+            },
+            "propertyType": {
+              "value": "condo",
+              "citation": "condo"
+            },
+            "timeline": {
+              "value": "by next month",
+              "citation": "need to settle by next month"
+            }
+          }
+        },
+        "draft": {
+          "ok": true,
+          "writer": "ag/gemini-3.8-flash",
+          "input": {
+            "profile": {
+              "budgetIDR": 1500000000,
+              "areas": [
+                "Tampines MRT"
+              ],
+              "intent": "buy",
+              "urgency": "high",
+              "propertyType": "condo",
+              "timeline": "by next month"
+            },
+            "leadState": "warm"
+          },
+          "output": {
+            "message": "Hi! Following up on your search to buy a condo near Tampines MRT by next month within your 1,500,000,000 IDR budget. Since your timeline is tight, could we jump on a brief phone call tomorrow to discuss the next steps? Best, Amelia",
+            "factsUsed": [
+              "budget: 1500000000 IDR",
+              "areas: Tampines MRT",
+              "intent: buy",
+              "property type: condo",
+              "timeline: by next month"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

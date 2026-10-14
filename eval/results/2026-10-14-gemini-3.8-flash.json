@@ -1,0 +1,451 @@
+{
+  "recordedAt": "2026-10-14T09:08:23.433Z",
+  "recording": "eval/recordings/2026-10-14-eval.json",
+  "model": "ag/gemini-3.8-flash",
+  "overall": {
+    "accuracy": 0.8472222222222222,
+    "precision": 0.7674418604651163,
+    "recall": 0.8472222222222222,
+    "hallucinationRate": 0.23255813953488372
+  },
+  "perField": {
+    "budgetIDR": {
+      "correct": 12,
+      "total": 12,
+      "hallucinations": 0,
+      "predictedNonEmpty": 6
+    },
+    "areas": {
+      "correct": 10,
+      "total": 12,
+      "hallucinations": 2,
+      "predictedNonEmpty": 8
+    },
+    "intent": {
+      "correct": 10,
+      "total": 12,
+      "hallucinations": 1,
+      "predictedNonEmpty": 8
+    },
+    "urgency": {
+      "correct": 10,
+      "total": 12,
+      "hallucinations": 2,
+      "predictedNonEmpty": 7
+    },
+    "propertyType": {
+      "correct": 9,
+      "total": 12,
+      "hallucinations": 3,
+      "predictedNonEmpty": 9
+    },
+    "timeline": {
+      "correct": 10,
+      "total": 12,
+      "hallucinations": 2,
+      "predictedNonEmpty": 5
+    }
+  },
+  "perConversation": [
+    {
+      "id": "c01_bsd_buy_urgent",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": false,
+        "intent": true,
+        "urgency": true,
+        "propertyType": false,
+        "timeline": true
+      },
+      "violations": 0,
+      "unreadable": false,
+      "predicted": {
+        "budgetIDR": 1500000000,
+        "areas": [
+          "BSD",
+          "BSD City"
+        ],
+        "intent": "buy",
+        "urgency": "high",
+        "propertyType": "rumah tinggal",
+        "timeline": "bulan ini"
+      },
+      "expected": {
+        "budgetIDR": 1500000000,
+        "areas": [
+          "BSD"
+        ],
+        "intent": "buy",
+        "urgency": "high",
+        "propertyType": "rumah",
+        "timeline": "bulan ini"
+      },
+      "rejected": []
+    },
+    {
+      "id": "c02_jaksel_rent_medium",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": true,
+        "urgency": false,
+        "propertyType": true,
+        "timeline": false
+      },
+      "violations": 0,
+      "unreadable": false,
+      "predicted": {
+        "budgetIDR": 15000000,
+        "areas": [
+          "Jaksel"
+        ],
+        "intent": "rent",
+        "urgency": "low",
+        "propertyType": "apartemen studio",
+        "timeline": "masih blm pasti"
+      },
+      "expected": {
+        "budgetIDR": 15000000,
+        "areas": [
+          "Jaksel"
+        ],
+        "intent": "rent",
+        "urgency": "unknown",
+        "propertyType": "apartemen studio",
+        "timeline": null
+      },
+      "rejected": []
+    },
+    {
+      "id": "c03_sg_buy_condo_lowurgency",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": true,
+        "urgency": true,
+        "propertyType": true,
+        "timeline": true
+      },
+      "violations": 0,
+      "unreadable": false,
+      "predicted": {
+        "budgetIDR": 2000000000,
+        "areas": [
+          "District 9",
+          "District 10"
+        ],
+        "intent": "buy",
+        "urgency": "low",
+        "propertyType": "condo",
+        "timeline": "tahun depan"
+      },
+      "expected": {
+        "budgetIDR": 2000000000,
+        "areas": [
+          "District 9",
+          "District 10"
+        ],
+        "intent": "buy",
+        "urgency": "low",
+        "propertyType": "condo",
+        "timeline": "tahun depan"
+      },
+      "rejected": []
+    },
+    {
+      "id": "c04_bsd_rent_house_asap",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": false,
+        "intent": true,
+        "urgency": true,
+        "propertyType": true,
+        "timeline": false
+      },
+      "violations": 0,
+      "unreadable": false,
+      "predicted": {
+        "budgetIDR": 20000000,
+        "areas": [
+          "BSD",
+          "De Park"
+        ],
+        "intent": "rent",
+        "urgency": "high",
+        "propertyType": "rumah",
+        "timeline": "minggu ini kalo bisa"
+      },
+      "expected": {
+        "budgetIDR": 20000000,
+        "areas": [
+          "BSD"
+        ],
+        "intent": "rent",
+        "urgency": "high",
+        "propertyType": "rumah",
+        "timeline": "minggu ini"
+      },
+      "rejected": []
+    },
+    {
+      "id": "c05_jkt_buy_apartment_seller_nego",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": true,
+        "urgency": true,
+        "propertyType": true,
+        "timeline": true
+      },
+      "violations": 0,
+      "unreadable": false,
+      "predicted": {
+        "budgetIDR": 900000000,
+        "areas": [
+          "Kemang"
+        ],
+        "intent": "buy",
+        "urgency": "low",
+        "propertyType": "apartemen",
+        "timeline": null
+      },
+      "expected": {
+        "budgetIDR": 900000000,
+        "areas": [
+          "Kemang"
+        ],
+        "intent": "buy",
+        "urgency": "low",
+        "propertyType": "apartemen",
+        "timeline": null
+      },
+      "rejected": []
+    },
+    {
+      "id": "c06_jkt_land_buy_nextyear",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": true,
+        "urgency": true,
+        "propertyType": true,
+        "timeline": true
+      },
+      "violations": 0,
+      "unreadable": false,
+      "predicted": {
+        "budgetIDR": 2000000000,
+        "areas": [
+          "Bintaro"
+        ],
+        "intent": "buy",
+        "urgency": "low",
+        "propertyType": "tanah kavling",
+        "timeline": "tahun depan"
+      },
+      "expected": {
+        "budgetIDR": 2000000000,
+        "areas": [
+          "Bintaro"
+        ],
+        "intent": "buy",
+        "urgency": "low",
+        "propertyType": "tanah kavling",
+        "timeline": "tahun depan"
+      },
+      "rejected": []
+    },
+    {
+      "id": "c07_multi_area_rent_apartment",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": true,
+        "urgency": true,
+        "propertyType": false,
+        "timeline": true
+      },
+      "violations": 0,
+      "unreadable": false,
+      "predicted": {
+        "budgetIDR": null,
+        "areas": [
+          "BSD",
+          "Alam Sutera"
+        ],
+        "intent": "rent",
+        "urgency": "unknown",
+        "propertyType": "apartemen",
+        "timeline": null
+      },
+      "expected": {
+        "budgetIDR": null,
+        "areas": [
+          "BSD",
+          "Alam Sutera"
+        ],
+        "intent": "rent",
+        "urgency": "unknown",
+        "propertyType": "apartemen 1BR",
+        "timeline": null
+      },
+      "rejected": []
+    },
+    {
+      "id": "c08_sparse_general_inquiry",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": true,
+        "urgency": true,
+        "propertyType": true,
+        "timeline": true
+      },
+      "violations": 0,
+      "unreadable": false,
+      "predicted": {
+        "budgetIDR": null,
+        "areas": [],
+        "intent": "unknown",
+        "urgency": "unknown",
+        "propertyType": "rumah",
+        "timeline": null
+      },
+      "expected": {
+        "budgetIDR": null,
+        "areas": [],
+        "intent": "unknown",
+        "urgency": "unknown",
+        "propertyType": "rumah",
+        "timeline": null
+      },
+      "rejected": []
+    },
+    {
+      "id": "c09_sparse_smalltalk_only",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": true,
+        "urgency": true,
+        "propertyType": true,
+        "timeline": true
+      },
+      "violations": 0,
+      "unreadable": false,
+      "predicted": {
+        "budgetIDR": null,
+        "areas": [],
+        "intent": "unknown",
+        "urgency": "unknown",
+        "propertyType": null,
+        "timeline": null
+      },
+      "expected": {
+        "budgetIDR": null,
+        "areas": [],
+        "intent": "unknown",
+        "urgency": "unknown",
+        "propertyType": null,
+        "timeline": null
+      },
+      "rejected": []
+    },
+    {
+      "id": "c10_sparse_voicenote_dropoff",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": true,
+        "urgency": true,
+        "propertyType": true,
+        "timeline": true
+      },
+      "violations": 0,
+      "unreadable": false,
+      "predicted": {
+        "budgetIDR": null,
+        "areas": [],
+        "intent": "unknown",
+        "urgency": "unknown",
+        "propertyType": null,
+        "timeline": null
+      },
+      "expected": {
+        "budgetIDR": null,
+        "areas": [],
+        "intent": "unknown",
+        "urgency": "unknown",
+        "propertyType": null,
+        "timeline": null
+      },
+      "rejected": []
+    },
+    {
+      "id": "c11_adversarial_agent_states_budget",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": false,
+        "urgency": true,
+        "propertyType": false,
+        "timeline": true
+      },
+      "violations": 0,
+      "unreadable": false,
+      "predicted": {
+        "budgetIDR": null,
+        "areas": [
+          "Alam Sutera"
+        ],
+        "intent": "unknown",
+        "urgency": "unknown",
+        "propertyType": "2BR",
+        "timeline": null
+      },
+      "expected": {
+        "budgetIDR": null,
+        "areas": [
+          "Alam Sutera"
+        ],
+        "intent": "buy",
+        "urgency": "unknown",
+        "propertyType": "apartemen 2BR",
+        "timeline": null
+      },
+      "rejected": []
+    },
+    {
+      "id": "c12_adversarial_friend_budget",
+      "fieldMatches": {
+        "budgetIDR": true,
+        "areas": true,
+        "intent": false,
+        "urgency": false,
+        "propertyType": true,
+        "timeline": true
+      },
+      "violations": 0,
+      "unreadable": false,
+      "predicted": {
+        "budgetIDR": null,
+        "areas": [],
+        "intent": "buy",
+        "urgency": "low",
+        "propertyType": null,
+        "timeline": null
+      },
+      "expected": {
+        "budgetIDR": null,
+        "areas": [],
+        "intent": "unknown",
+        "urgency": "unknown",
+        "propertyType": null,
+        "timeline": null
+      },
+      "rejected": []
+    }
+  ],
+  "guardrailViolations": 0,
+  "unreadable": 0
+}

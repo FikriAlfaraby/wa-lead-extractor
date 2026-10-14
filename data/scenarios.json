@@ -1,0 +1,302 @@
+[
+  {
+    "id": "clear-buyer",
+    "title": "A clear buyer",
+    "blurb": "In Bahasa Indonesia: budget, area and timing, all in the lead's own words.",
+    "leadName": "Rina Wijaya",
+    "agentId": "agent_budi_id",
+    "steps": [
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "halo kak, rumah di BSD yg diiklanin di Rumah123 masih ada?"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "Halo kak, masih ada. Mau saya kirim info lengkapnya?"
+      },
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "boleh kak. saya mau beli ya, bukan sewa, buat tinggal sendiri"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "Siap kak. Budget kira2 berapa biar saya pilihkan yg pas?"
+      },
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "budget 1.5M all in kak, udah sama BPHTB"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "Oke kak. Lebih suka yg deket stasiun atau deket AEON?"
+      },
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "deket AEON BSD aja kak"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "Noted. Rencana pindah kapan kak?"
+      },
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "urgent kak, harus udah pindah bulan depan"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "Siap kak, saya kirim beberapa unit yg cocok dulu ya"
+      },
+      {
+        "type": "extract"
+      },
+      {
+        "type": "draft"
+      }
+    ]
+  },
+  {
+    "id": "agent-floats-budget",
+    "title": "Agent floats a budget",
+    "blurb": "The agent guesses a budget; the lead never confirms it.",
+    "note": "Neither model took the agent's guess as the lead's budget. To see what the guardrail does when a model does, pick “A wrong answer, by hand”.",
+    "leadName": "Marcus Tan",
+    "agentId": "agent_amelia_sg",
+    "steps": [
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "hi, is the 2-bedder at District 9 still available?"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "Yes it is! Most buyers asking about this unit have a budget in the 1.5M range - does that match yours?"
+      },
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "hmm not sure yet, let me see the unit first"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "Sure, here are the photos [image]"
+      },
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "looks decent. this is for sale right, not rental?"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "Yes, it's a resale listing."
+      },
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "ok let me get back to you on my budget"
+      },
+      {
+        "type": "extract"
+      },
+      {
+        "type": "draft"
+      }
+    ],
+    "handMade": {
+      "note": "Written by hand, not by a model: the agent's guess reported as the lead's budget, quoting the agent's message.",
+      "extraction": {
+        "budgetIDR": {
+          "value": 1500000000,
+          "citation": "budget in the 1.5M range"
+        },
+        "areas": {
+          "value": [
+            "District 9"
+          ],
+          "citations": [
+            "District 9"
+          ]
+        },
+        "intent": {
+          "value": "buy",
+          "citation": "for sale right, not rental"
+        },
+        "urgency": {
+          "value": "unknown",
+          "citation": null
+        },
+        "propertyType": {
+          "value": "2-bedder",
+          "citation": "2-bedder at District 9"
+        },
+        "timeline": {
+          "value": null,
+          "citation": null
+        }
+      }
+    }
+  },
+  {
+    "id": "friends-budget",
+    "title": "A friend's budget",
+    "blurb": "In Bahasa Indonesia: the lead quotes a friend's budget, then says they are not interested.",
+    "note": "Neither model took the friend's budget as the lead's. The hand-made answer shows the gap: the quote is the lead's own words, so the citation check lets it through.",
+    "leadName": "Teguh Prasetyo",
+    "agentId": "agent_budi_id",
+    "steps": [
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "gan ini beda konteks dikit, temen gue kemarin abis dapet rumah baru di Bintaro"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "oh iya kak, kenapa ya?"
+      },
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "temen gue budgetnya sekitar setengah miliar an, katanya dapet bagus tuh"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "wah lumayan kak, kalau kakak sendiri gimana rencananya?"
+      },
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "kalo gue sih belom mikir jauh2, msh liat2 aja dulu skrg"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "oke kak santai aja, kabarin kalau udah ada gambaran"
+      },
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "sip gan nanti gue kabarin"
+      },
+      {
+        "type": "extract"
+      },
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "eh btw gak jadi deh gan, gak minat ah nyari-nyari lagi sekarang"
+      },
+      {
+        "type": "draft"
+      }
+    ],
+    "handMade": {
+      "note": "Written by hand, not by a model: the friend's budget reported as the lead's. The quote is real and the lead wrote it.",
+      "extraction": {
+        "budgetIDR": {
+          "value": 500000000,
+          "citation": "temen gue budgetnya sekitar setengah miliar an"
+        },
+        "areas": {
+          "value": [],
+          "citations": []
+        },
+        "intent": {
+          "value": "unknown",
+          "citation": null
+        },
+        "urgency": {
+          "value": "unknown",
+          "citation": null
+        },
+        "propertyType": {
+          "value": null,
+          "citation": null
+        },
+        "timeline": {
+          "value": null,
+          "citation": null
+        }
+      }
+    }
+  },
+  {
+    "id": "singapore-budget",
+    "title": "A Singapore budget",
+    "blurb": "The lead writes “1.5M” the Singapore way: S$1.5 million.",
+    "note": "Wrong budget, and not from a model: both models left it empty, since they were asked for rupiah and the lead gave Singapore dollars. The rule-based stage reads “1.5M” the Indonesian way, as IDR 1.5 billion, and the writer is given that number. The draft check passes that number and holds the draft back for something harmless: it does not see “Tampines” inside “Tampines MRT”.",
+    "leadName": "Sarah Lim",
+    "agentId": "agent_amelia_sg",
+    "steps": [
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "hi, saw your listing for the Tampines condo on PropertyGuru, still available?"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "Hi! Yes, it's still available. Would you like more details?"
+      },
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "yes please. I'm looking to buy, not rent - for own stay"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "Noted! What's your budget range so I can shortlist the right units?"
+      },
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "budget around 1.5M all-in, including stamp duty"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "Great - any preference within Tampines, nearer the MRT or the park?"
+      },
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "near Tampines MRT would be ideal"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "Got it. And when are you hoping to move in?"
+      },
+      {
+        "type": "message",
+        "speaker": "lead",
+        "text": "quite urgent leh, need to settle by next month"
+      },
+      {
+        "type": "message",
+        "speaker": "agent",
+        "text": "That's a quick timeline - let me send you a few suitable units first."
+      },
+      {
+        "type": "extract"
+      },
+      {
+        "type": "draft"
+      }
+    ]
+  }
+]
