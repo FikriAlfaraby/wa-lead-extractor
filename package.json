@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint --max-warnings=0 .",
     "record": "tsx eval/record.ts",
-    "score": "tsx eval/score-recording.ts"
+    "score": "tsx eval/score-recording.ts",
+    "outcomes": "tsx eval/scenario-outcomes.ts"
   },
   "dependencies": {
     "openai": "^4.68.0",
