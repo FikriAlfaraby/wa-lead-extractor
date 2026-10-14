@@ -25,6 +25,8 @@ export const ScenarioSchema = z.object({
   blurb: z.string(),
   /** What to look for in the models' runs; every claim in it is checked against the recording by a test. */
   note: z.string().optional(),
+  /** Where the chat happens; money shorthand depends on it. Indonesian unless said otherwise. */
+  market: z.enum(["id", "sg"]).optional(),
   leadName: z.string(),
   agentId: z.string(),
   steps: z.array(ScenarioStepSchema).min(1),

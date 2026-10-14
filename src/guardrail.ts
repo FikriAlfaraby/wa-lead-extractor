@@ -80,6 +80,24 @@ function verifyCitation(
   return false;
 }
 
+/**
+ * One quote can name two areas ("BSD sama Alam Sutera"). An area the model gave no quote of its
+ * own is kept when another of its area quotes is the lead's and names that area, word for word.
+ */
+export function sharedAreaCitation(
+  extraction: LlmExtraction,
+  area: string,
+  conversation: Conversation
+): string | null {
+  const name = normalize(area);
+  if (name.length === 0) return null;
+  return (
+    extraction.areas.citations.find(
+      (c) => normalize(c).includes(name) && citationFoundInLeadMessages(c, conversation)
+    ) ?? null
+  );
+}
+
 export function applyGuardrail(
   extraction: LlmExtraction,
   conversation: Conversation
@@ -103,6 +121,10 @@ export function applyGuardrail(
     const verifiedAreas: string[] = [];
     extraction.areas.value.forEach((area, index) => {
       const citation = extraction.areas.citations[index] ?? null;
+      if (!citation && sharedAreaCitation(extraction, area, conversation)) {
+        verifiedAreas.push(area);
+        return;
+      }
       if (verifyCitation(`areas[${index}]`, citation, conversation, violations)) {
         verifiedAreas.push(area);
       }

@@ -68,7 +68,7 @@ function conversationAtExtract(scenario: Scenario): Conversation {
   const messages = scenario.steps
     .slice(0, end === -1 ? scenario.steps.length : end)
     .flatMap((s) => (s.type === "message" ? [{ speaker: s.speaker, text: s.text }] : []));
-  return { id: scenario.id, messages };
+  return { id: scenario.id, messages, ...(scenario.market ? { market: scenario.market } : {}) };
 }
 
 async function recordDraft(

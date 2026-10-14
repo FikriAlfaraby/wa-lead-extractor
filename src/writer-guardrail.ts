@@ -31,6 +31,10 @@ export interface GuardrailVerdict {
 // budget. Raise/lower if false positives/negatives show up in practice.
 const MIN_FLAGGED_NUMBER = 10;
 
+/** Units after a number that make it a duration or a count, not a fact about the lead. */
+const NOT_A_FACT_UNIT =
+  /^\s*-?\s*(minutes?|mins?|menit|hours?|hrs?|jam|days?|hari|weeks?|months?|bulan|years?|tahun|seconds?|detik|units?|pcs|bedrooms?|br|kt|kamar|percent|persen|%)\b/i;
+
 // ponytail: small hardcoded gazetteer instead of NER/entity linking. Good
 // enough to catch an invented area in a work sample; a real system needs
 // proper location entity extraction to cover areas outside this list.
@@ -117,6 +121,9 @@ function findInventedNumbers(message: string, profile: LeadProfile): string[] {
     // juta/miliar magnitude ("900" meaning 900 million), or an incidental
     // count ("2 units") — fall back to the coarser ratio comparison.
     if (normalized < MIN_FLAGGED_NUMBER) continue;
+    // A duration or a count ("a 10-minute call", "15 menit", "3 bedrooms") is not a fact about the lead.
+    const after = message.slice((match.index ?? 0) + full.length);
+    if (NOT_A_FACT_UNIT.test(after)) continue;
     if (!isCloseToAny(normalized, allowed)) {
       violations.push(`number "${numberText}" not grounded in the lead profile`);
     }
@@ -126,10 +133,12 @@ function findInventedNumbers(message: string, profile: LeadProfile): string[] {
 
 function findInventedAreas(message: string, profile: LeadProfile): string[] {
   const lowerMessage = message.toLowerCase();
-  const knownAreas = new Set(profile.areas.map((a) => a.toLowerCase()));
+  const knownAreas = profile.areas.map((a) => a.toLowerCase());
   const violations: string[] = [];
   for (const term of KNOWN_AREA_TERMS) {
-    if (lowerMessage.includes(term.toLowerCase()) && !knownAreas.has(term.toLowerCase())) {
+    const lowerTerm = term.toLowerCase();
+    // "Tampines" in a draft is the lead's area when the lead said "Tampines MRT".
+    if (lowerMessage.includes(lowerTerm) && !knownAreas.some((area) => area.includes(lowerTerm))) {
       violations.push(`area "${term}" not present in the lead profile`);
     }
   }

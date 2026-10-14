@@ -133,7 +133,11 @@ export function runSimulation(
   now: string = REPLAY_NOW
 ): SimState {
   const messages: Message[] = [];
-  const conversationSoFar = (): Conversation => ({ id: scenario.id, messages: [...messages] });
+  const conversationSoFar = (): Conversation => ({
+    id: scenario.id,
+    messages: [...messages],
+    ...(scenario.market ? { market: scenario.market } : {}),
+  });
   let llmProfile: LeadProfile = { ...EMPTY_LEAD_PROFILE };
   let llmCitations: FactCitations = { ...NO_CITATIONS };
   let violations: Violation[] = [];

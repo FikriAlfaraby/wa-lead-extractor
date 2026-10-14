@@ -69,6 +69,7 @@
     "title": "Agent floats a budget",
     "blurb": "The agent guesses a budget; the lead never confirms it.",
     "note": "Neither model took the agent's guess as the lead's budget. To see what the guardrail does when a model does, pick “A wrong answer, by hand”.",
+    "market": "sg",
     "leadName": "Marcus Tan",
     "agentId": "agent_amelia_sg",
     "steps": [
@@ -237,7 +238,8 @@
     "id": "singapore-budget",
     "title": "A Singapore budget",
     "blurb": "The lead writes “1.5M” the Singapore way: S$1.5 million.",
-    "note": "Wrong budget, and not from a model: both models left it empty, since they were asked for rupiah and the lead gave Singapore dollars. The rule-based stage reads “1.5M” the Indonesian way, as IDR 1.5 billion, and the writer is given that number. The draft check passes that number and holds the draft back for something harmless: it does not see “Tampines” inside “Tampines MRT”.",
+    "note": "Both models leave the budget empty: they were asked for rupiah, and the lead gave Singapore dollars. The rule-based stage, told this is a Singapore chat, leaves it empty too. Until 14 October it read “1.5M” the Indonesian way, as IDR 1.5 billion, and the drafts repeated it.",
+    "market": "sg",
     "leadName": "Sarah Lim",
     "agentId": "agent_amelia_sg",
     "steps": [

@@ -78,12 +78,20 @@ export function normalizeIndonesianNumber(raw: string): number {
  */
 const MONEY_REGEX =
   /(?:rp\.?\s*)?(\d+(?:[.,]\d+)?)\s*(jt|juta|m|miliar|milyar)\b/i;
+/** Outside Indonesia "M" means million in the local currency; only rupiah said as rupiah counts. */
+const RUPIAH_ONLY_REGEX =
+  /(?:rp\.?\s*)?(\d+(?:[.,]\d+)?)\s*(jt|juta|miliar|milyar)\b|rp\.?\s*(\d+(?:[.,]\d+)?)\s*(m)\b/i;
+
+export type Market = "id" | "sg";
 
 export function parseMoneyToIDR(
-  text: string
+  text: string,
+  market: Market = "id"
 ): { amount: number; matchedText: string } | null {
-  const match = text.match(MONEY_REGEX);
-  if (!match) return null;
+  const found = text.match(market === "id" ? MONEY_REGEX : RUPIAH_ONLY_REGEX);
+  if (!found) return null;
+  // Normalise the rupiah-only pattern's second alternative into the same two groups.
+  const match = found[1] === undefined ? [found[0], found[3], found[4]] : found;
 
   const base = normalizeIndonesianNumber(match[1]);
   const unit = match[2].toLowerCase();
@@ -137,6 +145,12 @@ const LOW_URGENCY_KEYWORDS = [
   "masih survey",
 ];
 
+/** Words that put a clause about someone other than the lead: "temen gue", "my sister". */
+const THIRD_PARTY =
+  /\b(temen|teman|sepupu|tetangga|saudara|bokap|nyokap|ortu|orang ?tua|kakak (?:gue|gw|saya|aku)|adik (?:gue|gw|saya|aku)|my (?:friend|friends|brother|sister|parents|cousin|neighbou?r|colleague)|a friend)\b/i;
+/** Clause boundaries inside one message; a point or comma inside a number ("1.5M") is not one. */
+const CLAUSE_BREAK = /(?<!\d)[.,]|[.,](?!\d)|[;!?]|\b(?:tapi|terus|trus|but|and then)\b/i;
+
 function findKeyword(text: string, keywords: string[]): string | null {
   const lower = text.toLowerCase();
   for (const keyword of keywords) {
@@ -165,9 +179,14 @@ export function extractDeterministic(
 
   for (const message of conversation.messages) {
     if (message.speaker !== "lead") continue;
+    // What the lead says about a friend or a relative is not about the lead: drop those clauses.
+    const ownWords = message.text
+      .split(CLAUSE_BREAK)
+      .filter((clause) => clause && !THIRD_PARTY.test(clause))
+      .join(" ");
 
     if (result.budgetIDR === null) {
-      const money = parseMoneyToIDR(message.text);
+      const money = parseMoneyToIDR(ownWords, conversation.market ?? "id");
       if (money) {
         result.budgetIDR = money.amount;
         result.budgetCitation = money.matchedText;
@@ -175,12 +194,12 @@ export function extractDeterministic(
     }
 
     if (result.intent === null) {
-      const buyHit = findKeyword(message.text, BUY_KEYWORDS);
+      const buyHit = findKeyword(ownWords, BUY_KEYWORDS);
       if (buyHit) {
         result.intent = "buy";
         result.intentCitation = buyHit;
       } else {
-        const rentHit = findKeyword(message.text, RENT_KEYWORDS);
+        const rentHit = findKeyword(ownWords, RENT_KEYWORDS);
         if (rentHit) {
           result.intent = "rent";
           result.intentCitation = rentHit;
@@ -189,12 +208,12 @@ export function extractDeterministic(
     }
 
     if (result.urgency === null) {
-      const highHit = findKeyword(message.text, HIGH_URGENCY_KEYWORDS);
+      const highHit = findKeyword(ownWords, HIGH_URGENCY_KEYWORDS);
       if (highHit) {
         result.urgency = "high";
         result.urgencyCitation = highHit;
       } else {
-        const lowHit = findKeyword(message.text, LOW_URGENCY_KEYWORDS);
+        const lowHit = findKeyword(ownWords, LOW_URGENCY_KEYWORDS);
         if (lowHit) {
           result.urgency = "low";
           result.urgencyCitation = lowHit;

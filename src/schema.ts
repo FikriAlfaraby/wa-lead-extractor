@@ -16,6 +16,11 @@ export type Message = z.infer<typeof MessageSchema>;
 export const ConversationSchema = z.object({
   id: z.string(),
   messages: z.array(MessageSchema).min(1),
+  /**
+   * Where the chat happens. Money shorthand depends on it: in Indonesia "1.5M" is 1.5 miliar
+   * rupiah, in Singapore it is S$1.5 million. Indonesian unless said otherwise.
+   */
+  market: z.enum(["id", "sg"]).optional(),
 });
 export type Conversation = z.infer<typeof ConversationSchema>;
 
