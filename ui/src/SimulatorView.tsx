@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import agentsData from "../../data/agents.json";
 import type { AgentProfile } from "@pipeline/schema";
 import { HAND_MADE, type Scenario } from "@pipeline/scenario";
@@ -95,32 +95,40 @@ function SimulatorRun({
 
   const sim = useMemo(() => runSimulation(scenario, agent, stepIndex, outputs), [scenario, agent, stepIndex, outputs]);
 
+  // The button that finished the run disappears; keep the keyboard focus on the controls.
+  const replayRef = useRef<HTMLButtonElement>(null);
+  const focusReplay = useRef(false);
+  useEffect(() => {
+    if (sim.isComplete && focusReplay.current) replayRef.current?.focus();
+  }, [sim.isComplete]);
+
   const jumpTo = (index: number) => {
     setPlaying(false);
     setPendingSpeaker(null);
     setStepIndex(Math.min(index, lastStep));
+    focusReplay.current = index >= lastStep;
   };
 
   return (
     <div className="simulator-run">
       <div className="playback-controls">
-        <button
-          type="button"
-          className="btn btn--approve"
-          onClick={() => setPlaying((p) => !p)}
-          disabled={sim.isComplete}
-        >
-          {playing && !sim.isComplete ? "Pause" : "Play"}
-        </button>
-        <button type="button" className="btn btn--reject" onClick={() => jumpTo(stepIndex + 1)} disabled={sim.isComplete}>
-          Next step
-        </button>
-        <button type="button" className="btn btn--reject" onClick={() => jumpTo(lastStep)} disabled={sim.isComplete}>
-          Show all
-        </button>
-        <button type="button" className="btn btn--reject" onClick={onRestart}>
-          Restart
-        </button>
+        {sim.isComplete ? (
+          <button type="button" className="btn btn--approve" onClick={onRestart} ref={replayRef}>
+            Play again
+          </button>
+        ) : (
+          <>
+            <button type="button" className="btn btn--approve" onClick={() => setPlaying((p) => !p)}>
+              {playing ? "Pause" : "Play"}
+            </button>
+            <button type="button" className="btn btn--reject" onClick={() => jumpTo(stepIndex + 1)}>
+              Next step
+            </button>
+            <button type="button" className="btn btn--reject" onClick={() => jumpTo(lastStep)}>
+              Show all
+            </button>
+          </>
+        )}
       </div>
 
       <div className="simulator-panes">
