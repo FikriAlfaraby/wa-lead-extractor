@@ -1,8 +1,8 @@
 import type { Conversation, LeadProfile } from "./schema.js";
-import { EMPTY_LEAD_PROFILE } from "./schema.js";
 import { extractDeterministic } from "./deterministic.js";
 import { applyGuardrail, type Violation } from "./guardrail.js";
 import type { ExtractFn } from "./extract.js";
+import { mergeProfile } from "./merge.js";
 
 /**
  * Orchestrates the three stages and applies the merge policy: deterministic
@@ -37,19 +37,7 @@ export async function runPipeline(
     conversation
   );
 
-  const profile: LeadProfile = {
-    ...EMPTY_LEAD_PROFILE,
-    budgetIDR:
-      deterministic.budgetIDR !== null
-        ? deterministic.budgetIDR
-        : llmProfile.budgetIDR,
-    areas: llmProfile.areas,
-    intent: deterministic.intent !== null ? deterministic.intent : llmProfile.intent,
-    urgency:
-      deterministic.urgency !== null ? deterministic.urgency : llmProfile.urgency,
-    propertyType: llmProfile.propertyType,
-    timeline: llmProfile.timeline,
-  };
+  const profile = mergeProfile(deterministic, llmProfile);
 
   return { profile, violations };
 }
