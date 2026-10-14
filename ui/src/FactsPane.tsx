@@ -1,8 +1,13 @@
-import { useEffect, useRef, useState } from "react";
 import type { LeadProfile } from "@pipeline/schema";
 import type { QualificationState } from "@pipeline/qualify";
-import type { SimState, FactCitations } from "./simulate";
-import { LEAD_STATE_LABEL, QUALIFICATION_LABEL, formatBudgetIDR } from "./labels";
+import type { DraftState, FactCitations, SimState } from "@pipeline/replay";
+import {
+  LEAD_STATE_LABEL,
+  QUALIFICATION_LABEL,
+  REJECTION_REASON,
+  fieldLabel,
+  formatBudgetIDR,
+} from "./labels";
 
 type FactKey = keyof FactCitations;
 
@@ -37,84 +42,113 @@ function primaryCitation(citations: FactCitations, key: FactKey): string | null 
   return key === "areas" ? (citations.areas[0] ?? null) : citations[key];
 }
 
+function extractionLine(sim: SimState): string | null {
+  if (sim.extractionStatus === "pending") return "The model reads the chat once the lead has answered the agent's questions.";
+  if (sim.extractionStatus === "unreadable") return "The model's reply could not be read, so nothing from it is used.";
+  return null;
+}
+
+function DraftSection({ draft, writer }: { draft: DraftState; writer: string | null }) {
+  if (draft.status === "blocked") {
+    return <p className="draft-blocked">No follow-up drafted: {draft.reason}.</p>;
+  }
+  if (draft.status === "unreadable") {
+    return <p className="draft-blocked">The writer's reply could not be read, so there is no draft.</p>;
+  }
+  return (
+    <>
+      <blockquote className="lead-card__draft">{draft.output.message}</blockquote>
+      {writer && <p className="draft-writer">Written by {writer}.</p>}
+      {draft.verdict.passed ? (
+        <span className="guardrail guardrail--pass">Passed: its numbers and areas are ones the lead gave, and it fits the agent's style.</span>
+      ) : (
+        <div className="guardrail guardrail--fail">
+          <span>Held back for a person to check:</span>
+          <ul>
+            {draft.verdict.violations.map((v) => (
+              <li key={v}>{v}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </>
+  );
+}
+
 interface FactsPaneProps {
   sim: SimState;
   onFactClick: (citation: string | null) => void;
+  /** Shown under the facts: what to look for, and where the model output came from. */
+  notes?: string[];
+  /** The model that wrote the draft. */
+  writer?: string | null;
 }
 
-export function FactsPane({ sim, onFactClick }: FactsPaneProps) {
-  const prevProfileRef = useRef<LeadProfile>(sim.profile);
-  const [flashFields, setFlashFields] = useState<Set<FactKey>>(new Set());
-
-  useEffect(() => {
-    const prev = prevProfileRef.current;
-    const changed = new Set<FactKey>();
-    for (const { key } of FACT_FIELDS) {
-      if (JSON.stringify(prev[key as keyof LeadProfile]) !== JSON.stringify(sim.profile[key as keyof LeadProfile])) {
-        changed.add(key);
-      }
-    }
-    prevProfileRef.current = sim.profile;
-    if (changed.size === 0) return;
-    setFlashFields(changed);
-    const timer = setTimeout(() => setFlashFields(new Set()), 900);
-    return () => clearTimeout(timer);
-  }, [sim.profile]);
+export function FactsPane({ sim, onFactClick, notes = [], writer = null }: FactsPaneProps) {
+  const status = extractionLine(sim);
 
   return (
     <div className="facts-pane">
-      <section className="facts-section">
-        <h3>Extracted facts (cite-or-null)</h3>
+      <section className="facts-section" aria-label="Facts">
+        <h3>Facts, each with the lead's own words</h3>
         <dl className="fact-grid">
           {FACT_FIELDS.map(({ key, label }) => {
             const { text, isNull } = factValueDisplay(sim.profile, key);
-            const citation = primaryCitation(sim.citations, key);
+            const citation = isNull ? null : primaryCitation(sim.citations, key);
             return (
               <div key={key} className="fact-row">
                 <dt>{label}</dt>
                 <dd>
+                  {/* Keyed on the value: a new value mounts a new button, whose CSS
+                      animation flashes it once. No state, no effect. */}
                   <button
+                    key={text}
                     type="button"
-                    className={`fact-value ${isNull ? "fact-value--null" : ""} ${
-                      flashFields.has(key) ? "fact-value--flash" : ""
-                    }`}
+                    className={`fact-value ${isNull ? "fact-value--null" : "fact-value--flash"}`}
                     disabled={citation === null}
                     onClick={() => onFactClick(citation)}
-                    title={citation ? `Cited: “${citation}”` : "No citation"}
+                    aria-label={citation ? `${label}: ${text}. Show the message it comes from` : `${label}: none`}
                   >
                     {text}
                   </button>
+                  {citation && <q className="fact-quote">{citation}</q>}
                 </dd>
               </div>
             );
           })}
         </dl>
 
-        {sim.extractionNote && <p className="facts-note">{sim.extractionNote}</p>}
+        {status && <p className="facts-note">{status}</p>}
 
         {sim.violations.length > 0 && (
           <div className="guardrail guardrail--fail">
-            <span>Guardrail rejected {sim.violations.length} citation(s):</span>
+            <span>Thrown out by the guardrail:</span>
             <ul>
               {sim.violations.map((v, i) => (
                 <li key={i}>
                   <button type="button" className="violation-link" onClick={() => onFactClick(v.citation)}>
-                    {v.field}: {v.reason.replace(/_/g, " ")}
-                    {v.citation ? ` — “${v.citation}”` : ""}
+                    {fieldLabel(v.field)}
+                    {v.citation ? <> <q>{v.citation}</q></> : null}: {REJECTION_REASON[v.reason]}
                   </button>
                 </li>
               ))}
             </ul>
           </div>
         )}
+
+        {notes.map((note) => (
+          <p key={note} className="facts-note facts-note--source">
+            {note}
+          </p>
+        ))}
       </section>
 
-      <section className="facts-section">
+      <section className="facts-section" aria-label="Lead state">
         <h3>Lead state</h3>
         <span className={`badge badge--state-${sim.leadState}`}>{LEAD_STATE_LABEL[sim.leadState]}</span>
       </section>
 
-      <section className="facts-section">
+      <section className="facts-section" aria-label="Qualification">
         <h3>Qualification</h3>
         <div className="qual-strip">
           {QUAL_STATES.map((state) => (
@@ -130,7 +164,7 @@ export function FactsPane({ sim, onFactClick }: FactsPaneProps) {
           <ul className="transition-log">
             {sim.transitions.map((t, i) => (
               <li key={i}>
-                <strong>{QUALIFICATION_LABEL[t.state]}</strong> — {t.reason}
+                <strong>{QUALIFICATION_LABEL[t.state]}</strong>: {t.reason}
               </li>
             ))}
           </ul>
@@ -138,21 +172,9 @@ export function FactsPane({ sim, onFactClick }: FactsPaneProps) {
       </section>
 
       {sim.draft && (
-        <section className="facts-section">
-          <h3>AI draft + guardrail</h3>
-          <blockquote className="lead-card__draft">{sim.draft.output.message}</blockquote>
-          {sim.draft.verdict.passed ? (
-            <span className="guardrail guardrail--pass">Guardrail: passed</span>
-          ) : (
-            <div className="guardrail guardrail--fail">
-              <span>Guardrail: {sim.draft.verdict.violations.length} violation(s)</span>
-              <ul>
-                {sim.draft.verdict.violations.map((v) => (
-                  <li key={v}>{v}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+        <section className="facts-section" aria-label="Follow-up draft">
+          <h3>Follow-up draft</h3>
+          <DraftSection draft={sim.draft} writer={writer} />
         </section>
       )}
     </div>

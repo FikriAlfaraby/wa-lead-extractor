@@ -1,66 +1,46 @@
 import { describe, it, expect } from "vitest";
 import agentsData from "../../data/agents.json";
 import type { AgentProfile } from "@pipeline/schema";
-import { runSimulation } from "./simulate";
-import { SCENARIOS } from "./scenarios";
+import { outputsFor, runSimulation, sourcesFor } from "@pipeline/replay";
+import { HAND_MADE } from "@pipeline/scenario";
+import { RECORDING, SCENARIOS } from "./scenarios";
 
 const agents = agentsData as AgentProfile[];
 
-function finalState(scenarioId: string) {
-  const scenario = SCENARIOS.find((s) => s.id === scenarioId);
-  if (!scenario) throw new Error(`unknown scenario: ${scenarioId}`);
-  const agent = agents.find((a) => a.id === scenario.agentId) ?? agents[0];
-  return runSimulation(scenario, agent, scenario.steps.length - 1);
-}
-
 /**
- * Guards the thing the task explicitly asked to protect: that the scripted
- * scenarios in scenarios.ts are consistent with the REAL deterministic
- * pipeline (src/guardrail.ts, src/qualify.ts, src/writer-guardrail.ts), not
- * just hand-verified once and left to drift. Runs the real functions
- * against the exact shipped scenario data (via simulate.ts), not a
- * duplicated copy.
+ * What the browser bundle loads: the scenarios and the scenario part of the
+ * recording, through the same schemas the recorder wrote them with. The
+ * claims the notes make are tested at the root (test/recordings.test.ts);
+ * this checks the UI's own wiring.
  */
-describe("scenario scripts stay consistent with the real pipeline code", () => {
-  it("scenario 2 (agent floats a budget): the real guardrail rejects the agent-sourced citation", () => {
-    const sim = finalState("agent-floats-budget");
-    expect(sim.violations).toEqual([
-      { field: "budgetIDR", reason: "citation_from_agent", citation: "budget in the 1.5M range" },
-    ]);
-    expect(sim.profile.budgetIDR).toBeNull();
-    // Because the budget never confirms, the real qualify() reducer never
-    // crosses the qualified bar — this is the whole point of the scenario.
-    expect(sim.qualState).toBe("qualifying");
+describe("the simulator's data", () => {
+  it("loads four scenarios and two recorded models", () => {
+    expect(SCENARIOS.map((s) => s.id)).toEqual(["clear-buyer", "agent-floats-budget", "friends-budget", "singapore-budget"]);
+    expect(RECORDING.models).toEqual(["cx/gpt-6-luna", "ag/gemini-3.8-flash"]);
   });
 
-  it("scenario 1 (happy path): a clean, lead-cited extraction has zero violations and reaches handed_off", () => {
-    const sim = finalState("happy-path");
-    expect(sim.violations).toEqual([]);
-    expect(sim.profile).toEqual({
-      budgetIDR: 1_500_000_000,
-      areas: ["Tampines"],
-      intent: "buy",
-      urgency: "high",
-      propertyType: "condo",
-      timeline: "next month",
-    });
-    expect(sim.qualState).toBe("handed_off");
-  });
-
-  it("scenario 3 (friend's budget): citation check passes (real, lead-sourced text) though the fact is about a friend", () => {
-    const sim = finalState("friends-budget");
-    expect(sim.violations).toEqual([]);
-    expect(sim.profile.budgetIDR).toBe(500_000_000);
-    expect(sim.profile.intent).toBe("unknown");
-    // The lead opts out mid-scenario; the real qualify() reducer disqualifies.
-    expect(sim.qualState).toBe("disqualified");
-  });
-
-  it("every scenario's recorded draft passes the real writer guardrail", () => {
+  it("replays every scenario from every source to the end", () => {
     for (const scenario of SCENARIOS) {
-      const sim = finalState(scenario.id);
-      expect(sim.draft).not.toBeNull();
-      expect(sim.draft?.verdict).toEqual({ passed: true, violations: [] });
+      const agent = agents.find((a) => a.id === scenario.agentId);
+      expect(agent).toBeDefined();
+      for (const source of sourcesFor(RECORDING, scenario)) {
+        const sim = runSimulation(scenario, agent as AgentProfile, scenario.steps.length - 1, outputsFor(RECORDING, scenario, source));
+        expect(sim.isComplete).toBe(true);
+        expect(sim.extractionStatus).toBe("read");
+        expect(sim.draft).not.toBeNull();
+        if (sim.qualState === "disqualified") expect(sim.draft?.status).toBe("blocked");
+        else expect(sim.draft?.status).toBe("written");
+      }
     }
+  });
+
+  it("offers the hand-made answer only where a scenario has one", () => {
+    for (const scenario of SCENARIOS) {
+      expect(sourcesFor(RECORDING, scenario).includes(HAND_MADE)).toBe(scenario.handMade !== undefined);
+    }
+  });
+
+  it("keeps the eval runs out of the bundle", () => {
+    expect(Object.keys(RECORDING).sort()).toEqual(["gateway", "models", "recordedAt", "scenarios"]);
   });
 });

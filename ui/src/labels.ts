@@ -1,6 +1,7 @@
 import type { AgentProfile, LeadProfile } from "@pipeline/schema";
-import type { Scenario } from "./scenarios";
-import type { SimState } from "./simulate";
+import type { Violation } from "@pipeline/guardrail";
+import { HAND_MADE, type Scenario } from "@pipeline/scenario";
+import type { SimState } from "@pipeline/replay";
 import type { LeadRow } from "./types";
 
 export const LEAD_STATE_LABEL: Record<LeadRow["leadState"], string> = {
@@ -16,6 +17,36 @@ export const QUALIFICATION_LABEL: Record<LeadRow["qualificationState"], string> 
   disqualified: "Disqualified",
   handed_off: "Handed off",
 };
+
+export const REJECTION_REASON: Record<Violation["reason"], string> = {
+  citation_from_agent: "the agent said this, not the lead",
+  citation_not_found: "these words are not in the chat",
+  missing_citation: "no quote from the lead",
+};
+
+const FIELD_LABEL: Record<string, string> = {
+  budgetIDR: "Budget",
+  areas: "Area",
+  intent: "Intent",
+  urgency: "Urgency",
+  propertyType: "Property type",
+  timeline: "Timeline",
+};
+
+/** "areas[1]" -> "Area" */
+export function fieldLabel(field: string): string {
+  return FIELD_LABEL[field.replace(/\[\d+\]$/, "")] ?? field;
+}
+
+const MODEL_LABEL: Record<string, string> = {
+  "cx/gpt-6-luna": "GPT-6 Luna",
+  "ag/gemini-3.8-flash": "Gemini 3.8 Flash",
+};
+
+export function sourceLabel(source: string): string {
+  if (source === HAND_MADE) return "A wrong answer, by hand";
+  return MODEL_LABEL[source] ?? source.slice(source.lastIndexOf("/") + 1);
+}
 
 export function formatBudgetIDR(value: number | null): string {
   if (value === null) return "∅";
@@ -38,6 +69,7 @@ export function formatProfileSummary(profile: LeadProfile): string {
 
 /** Turns a completed simulation run into the same row shape the Queue tab renders. */
 export function buildLeadRow(scenario: Scenario, agent: AgentProfile, sim: SimState): LeadRow {
+  const written = sim.draft?.status === "written" ? sim.draft : null;
   return {
     id: `sim_${scenario.id}_${Date.now()}`,
     name: scenario.leadName,
@@ -46,7 +78,7 @@ export function buildLeadRow(scenario: Scenario, agent: AgentProfile, sim: SimSt
     qualificationReason: sim.transitions[sim.transitions.length - 1]?.reason ?? "",
     profileSummary: formatProfileSummary(sim.profile),
     agentName: agent.name,
-    draftMessage: sim.draft?.output.message ?? "(no draft yet)",
-    guardrail: sim.draft?.verdict ?? { passed: true, violations: [] },
+    draftMessage: written?.output.message ?? "(no draft)",
+    guardrail: written?.verdict ?? { passed: true, violations: [] },
   };
 }

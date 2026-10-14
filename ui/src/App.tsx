@@ -5,6 +5,7 @@ import { LiveDemoView } from "./LiveDemoView";
 import { SimulatorView } from "./SimulatorView";
 import { QueueView } from "./QueueView";
 import "./App.css";
+import "./Simulator.css";
 
 const fixtures = fixturesData as LeadRow[];
 
@@ -40,12 +41,10 @@ function App() {
       {tab === "queue" && <QueueView leads={leads} />}
 
       <footer className="app-footer">
-        Deterministic stages run live in your browser — the same production code from{" "}
-        <code>src/</code>. Simulator LLM outputs are recorded from real pipeline runs; Live demo
-        calls the real Worker API for a live extraction/draft. Number/locale conventions are
-        per-market configuration; this demo pipeline currently runs the Indonesian convention (jt =
-        million, M/miliar = billion, comma decimals), so &ldquo;1.5M&rdquo; parses as 1.5 billion
-        IDR.
+        The checks run in your browser: the same code as <code>src/</code>. The Simulator replays
+        model answers recorded from real calls (<code>eval/recordings/</code>); the Live demo calls
+        the Worker API. Money is read the Indonesian way (jt = million, M/miliar = billion), so a
+        Singapore &ldquo;1.5M&rdquo; is misread as 1.5 billion IDR, as the Simulator shows.
       </footer>
     </div>
   );

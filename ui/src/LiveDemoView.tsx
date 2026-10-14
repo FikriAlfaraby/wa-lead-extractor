@@ -1,15 +1,21 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import agentsData from "../../data/agents.json";
-import type { AgentProfile, LeadProfile, Message } from "@pipeline/schema";
+import type { AgentProfile, LeadProfile, Message, WriterOutput } from "@pipeline/schema";
 import type { Violation } from "@pipeline/guardrail";
 import type { LeadState } from "@pipeline/classify";
-import type { QualificationState } from "@pipeline/qualify";
+import { draftAllowed, type QualificationState } from "@pipeline/qualify";
+import type { GuardrailVerdict } from "@pipeline/writer-guardrail";
 import { ChatPane } from "./ChatPane";
 import { FactsPane } from "./FactsPane";
 import { formatProfileSummary } from "./labels";
-import type { SimState, FactCitations, DraftResult, Transition } from "./simulate";
+import type { SimState, FactCitations, Transition } from "@pipeline/replay";
 import type { LeadRow } from "./types";
 import "./Simulator.css";
+
+interface DraftResult {
+  output: WriterOutput;
+  verdict: GuardrailVerdict;
+}
 
 const agents = agentsData as AgentProfile[];
 
@@ -92,7 +98,7 @@ export function LiveDemoView({ onAddToQueue }: { onAddToQueue: (row: LeadRow) =>
   const [draft, setDraft] = useState<DraftResult | null>(null);
   const [draftPending, setDraftPending] = useState(false);
   const [sentToQueue, setSentToQueue] = useState(false);
-  const baseTime = useRef(new Date()).current;
+  const [baseTime] = useState(() => new Date());
 
   const sendLeadMessage = async (text: string) => {
     const trimmed = text.trim();
@@ -134,16 +140,17 @@ export function LiveDemoView({ onAddToQueue }: { onAddToQueue: (row: LeadRow) =>
     profile: analysis.profile,
     citations: NO_CITATIONS,
     violations: analysis.guardrailViolations,
-    extractionNote: null,
+    extractionStatus: "read",
     leadState: analysis.leadState,
     qualState: analysis.qualification.state,
     transitions: analysis.qualification.trajectory,
-    draft,
+    draft: draft && { status: "written", ...draft },
+    draftInput: null,
     isComplete: true,
   };
 
   const handleSendToQueue = () => {
-    if (!sim?.draft) return;
+    if (!sim || !draft) return;
     const agent = agents.find((a) => a.id === agentId) ?? agents[0];
     onAddToQueue({
       id: `live_${Date.now()}`,
@@ -153,13 +160,18 @@ export function LiveDemoView({ onAddToQueue }: { onAddToQueue: (row: LeadRow) =>
       qualificationReason: sim.transitions[sim.transitions.length - 1]?.reason ?? "",
       profileSummary: formatProfileSummary(sim.profile),
       agentName: agent.name,
-      draftMessage: sim.draft.output.message,
-      guardrail: sim.draft.verdict,
+      draftMessage: draft.output.message,
+      guardrail: draft.verdict,
     });
     setSentToQueue(true);
   };
 
-  const canGenerateDraft = analysis !== null && hasAnyProfileFact(analysis.profile) && !draftPending;
+  // Same gate as the simulator: a lead who said stop gets no follow-up.
+  const canGenerateDraft =
+    analysis !== null &&
+    hasAnyProfileFact(analysis.profile) &&
+    draftAllowed(analysis.qualification.state) &&
+    !draftPending;
 
   return (
     <div className="live-demo-view">

@@ -26,11 +26,27 @@ function resolveNodeNextTsSources(): Plugin {
 }
 
 // https://vite.dev/config/
-export default defineConfig({
+// `vite build --mode embed` builds the simulator alone, as one script with its
+// CSS inlined, for the page on fikrialfaraby.com (see src/embed.tsx).
+export default defineConfig(({ mode }) => ({
   plugins: [react(), resolveNodeNextTsSources()],
   resolve: {
     alias: {
       '@pipeline': pipelineDir,
     },
   },
-})
+  ...(mode === 'embed' && {
+    define: { 'process.env.NODE_ENV': JSON.stringify('production') },
+    publicDir: false as const,
+    build: {
+      outDir: 'dist-embed',
+      emptyOutDir: true,
+      lib: {
+        entry: fileURLToPath(new URL('src/embed.tsx', import.meta.url)),
+        name: 'WaLeadSimulator',
+        formats: ['iife' as const],
+        fileName: () => 'wa-lead-sim.js',
+      },
+    },
+  }),
+}))
