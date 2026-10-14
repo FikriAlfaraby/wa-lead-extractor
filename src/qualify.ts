@@ -54,6 +54,15 @@ export function detectExplicitStop(conversation: Conversation): boolean {
   );
 }
 
+/**
+ * Whether the writer may draft a follow-up for a lead in this state. A
+ * disqualified lead gets no message: the writer is never told that the lead
+ * said stop, so this gate, not the prompt, is what keeps it from writing one.
+ */
+export function draftAllowed(state: QualificationState): boolean {
+  return state !== "disqualified";
+}
+
 function isTerminal(state: QualificationState): boolean {
   return state === "disqualified" || state === "handed_off";
 }

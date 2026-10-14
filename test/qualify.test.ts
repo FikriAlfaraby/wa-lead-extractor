@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { qualify, detectExplicitStop } from "../src/qualify.js";
+import { qualify, detectExplicitStop, draftAllowed } from "../src/qualify.js";
 import { EMPTY_LEAD_PROFILE } from "../src/schema.js";
 import type { LeadProfile, Conversation } from "../src/schema.js";
 
@@ -120,5 +120,17 @@ describe("detectExplicitStop", () => {
       messages: [{ speaker: "lead", text: "masih minat, tunggu kabar ya" }],
     };
     expect(detectExplicitStop(conversation)).toBe(false);
+  });
+});
+
+describe("draftAllowed", () => {
+  it("blocks a draft for a disqualified lead", () => {
+    expect(draftAllowed("disqualified")).toBe(false);
+  });
+
+  it("allows a draft in every other state", () => {
+    for (const state of ["new", "qualifying", "qualified", "handed_off"] as const) {
+      expect(draftAllowed(state)).toBe(true);
+    }
   });
 });
