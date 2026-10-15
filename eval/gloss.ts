@@ -34,9 +34,16 @@ Words of these chats:
   that follows them.
 - sewa = rent; beli = buy; kontrakan = a rented house; KT (3KT) = bedrooms; tanah kavling = a plot
   of land; rumah tinggal = a house to live in; apartemen = apartment; Jaksel = South Jakarta.
-- In these chats 1.5M means 1.5 miliar: write 1.5 billion (rupiah). jt/juta = million, rb = thousand.
+- In these chats 1.5M means 1.5 miliar: write 1.5 billion (rupiah), never 1.5M. jt/juta = million,
+  rb = thousand. A line that is only an amount ("1.5M") becomes "1.5 billion rupiah".
 - bulan ini = this month; bulan depan = next month; minggu ini = this week; tahun depan = next year;
   belum pasti = not decided yet.
+- Selamat siang = Good day (or Hello); siang on its own is midday, never afternoon.
+- "masih ada." with a full stop is a statement: it's still available. Keep every statement a statement
+  and every question a question.
+- msh jual rumah? = are you still selling houses? (jual = sell, beli = buy, sewa = rent: never swap them).
+- budget sewa per tahun atau per bulan = is your rental budget per year or per month.
+- BPHTB = the land and building transfer tax.
 - A 2 written after a word repeats the word, it is not the number two: liat2 = look around,
   tanya2 = ask a few things, pilih2 = picky, survey2 = look around, buru2 = in a hurry.
 - ga or gak at the end of a question only asks; it is not a "not": "masih available ga?" = "is it
@@ -61,6 +68,7 @@ const read = <T>(path: string) => JSON.parse(readFileSync(join(ROOT, path), "utf
 interface GlossFile {
   about: string;
   model: string;
+  models?: string[];
   glosses: Record<string, string | null>;
   corrected_by_hand: Record<string, string>;
 }
@@ -155,7 +163,9 @@ async function main() {
     const about =
       "English glosses for readers of fikrialfaraby.com/wa-lead. The models saw only the original lines. Written by " +
       "eval/gloss.ts with the model below and checked by test/glosses.test.ts. null: the line has no Indonesian in it.";
-    writeFileSync(PATH, `${JSON.stringify({ about, model, glosses, corrected_by_hand: file.corrected_by_hand }, null, 1)}\n`);
+    // every model that wrote a gloss in the file, so the page can name its translator truthfully
+    const models = [...new Set([...(file.models ?? [file.model]), model].filter(Boolean))];
+    writeFileSync(PATH, `${JSON.stringify({ about, model, models, glosses, corrected_by_hand: file.corrected_by_hand }, null, 1)}\n`);
   };
 
   const todo = order.filter((line) => !(line in file.glosses) || problems(line, file.glosses[line] ?? null, keep).length);
@@ -178,6 +188,8 @@ async function main() {
   const worker = async () => {
     for (let i = next++; i < chunks.length; i = next++) {
       for (const [line, gloss] of await translate(chunks[i] ?? [])) {
+        // a gloss that still fails leaves the file, so the run reports it as failing
+        if (problems(line, file.glosses[line] ?? null, keep).length) delete file.glosses[line];
         if (!problems(line, gloss, keep).length) file.glosses[line] = gloss;
         else if (!problems(line, null, keep).length) {
           // not Indonesian by the word list: no gloss is needed, but say so where the model translated it

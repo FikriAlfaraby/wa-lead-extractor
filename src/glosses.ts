@@ -31,7 +31,10 @@ permisi diposting dijadwalkan survey2 compare2 buru2 nyarinya rencananya biasany
 mentok`.split(/\s+/);
 /** Short words that are also English words or names when capitalised ("Hello Dan", "Ada"): they count
  * only in lower case, on both sides. */
-const AMBIGUOUS = new Set(["dan", "di", "ke", "ya", "ada", "apa", "mana", "dia", "sama", "mau", "kita", "ka", "ga", "aku", "bs", "baru"]);
+const AMBIGUOUS = new Set([
+  "dan", "di", "ke", "ya", "ada", "apa", "mana", "dia", "sama", "mau", "kita", "ka", "ga", "aku", "bs", "baru",
+  "mei", "dong", "yang", "kira",
+]);
 const STRICT = new RegExp(`\\b(${WORDS.filter((w) => !AMBIGUOUS.has(w)).join("|")})\\b`, "i");
 const LOWER = new RegExp(`\\b(${[...AMBIGUOUS].join("|")})\\b`);
 /** warnanya, budgetnya: the -nya forms the list cannot hold one by one (not Kenya, not Tanya). */
@@ -40,6 +43,9 @@ const NYA = /\b[a-z]{3,}nya\b/i;
  * they make a line Indonesian, but an English gloss may keep them. Months spelt the same in both (April,
  * September, November) count for neither. */
 const DETECT_ONLY = /\b(jam|sore|jaksel)\b/i;
+/** A quote that is only an amount in M ("1.5M", "budget 1.5M"): in these Indonesian chats M is miliar,
+ * which an English reader takes for a million, so it gets English too. */
+const BARE_M = /^(budget\s+)?\d+(?:[.,]\d+)?\s?M$/i;
 /** A number with the unit that scales it. In these chats "1.5M" is 1.5 miliar: billions of rupiah. */
 const AMOUNT = /(?<![\d.,:])(\d+(?:[.,:]\d+)*)(?:\s?(rb|ribu|k|jt|juta|thousand|million|miliar|milyar|billion|bn|m)\b)?/gi;
 const ZEROS: Record<string, number> = {
@@ -55,17 +61,53 @@ const DAYS: [RegExp, RegExp, string][] = [
   [/\bkamis\b/i, /\bthu(rs|rsday)?\b/i, "Thursday"],
   [/\bjumat\b/i, /\bfri(day)?\b/i, "Friday"],
   [/\bsabtu\b/i, /\bsat(urday)?\b/i, "Saturday"],
-  // lower-case minggu is also "week"; Minggu, or hari minggu, is Sunday
-  [/\bMinggu\b|\bhari minggu\b/, /\bsun(day)?\b/i, "Sunday"],
+  // minggu is also "week" (minggu ini, this week); Minggu on its own, or hari minggu, is Sunday
+  [/\bhari minggu\b|\bMinggu\b(?!\s+(ini|depan|lalu)\b)/i, /\bsun(day)?\b/i, "Sunday"],
 ];
-/** A "not": tidak, belum, bukan, jangan. Not ga or gak: in these chats they as often only ask
- * ("ada yg dket stasiun ga", is there one near a station?) as deny. */
-const NEGATION = /\b(tidak|tdk|belum|blm|belom|bukan|jangan|jgn)\b/i;
+/** A "not": tidak, belum, bukan, jangan; and ga or gak before a word that is not a question tag
+ * ("ga terlalu", "gak minat"). Ga at the end of a question only asks ("masih available ga?",
+ * "ada yg dket stasiun ga"), as it does before yg or sih. */
+const NEGATION = /\b(tidak|tdk|belum|blm|belom|bukan|jangan|jgn)\b|\b(ga|gak|nggak|ngga|enggak|gk)\s+(?!(yg|yang|sih|ya|kak|gan|deh|nih|jadi|papa)\b)(?![^.!\n?]*\?)[a-z]/i;
 const NOT = /\b(not|no|never|none|nothing|nobody|cannot|without|neither|nor|unsure|undecided|uncertain|longer)\b|n['’]t\b/i;
 
 /** A line is Indonesian when it has one of the words above; the short ones count only in lower case. */
 export const isIndonesian = (text: string): boolean =>
-  STRICT.test(text) || LOWER.test(text) || NYA.test(text) || DETECT_ONLY.test(text);
+  STRICT.test(text) || LOWER.test(text) || NYA.test(text) || DETECT_ONLY.test(text) || BARE_M.test(text.trim());
+
+/** Buying and renting are the facts these chats turn on; a gloss must not swap them. */
+const BUY = /\b(beli|membeli|jual)\b/i;
+const RENT = /\b(sewa|kontrakan|ngontrak)\b/i;
+/** A question in Indonesian chat may come without a "?": a tag at the end of a clause (ya, kan, ga,
+ * kah), "ya bukan" (…, right, not …?), a question word anywhere (berapa, kapan, gimana), ga before yg
+ * or sih, or a clause that ends with bisa or ready. */
+const ASKS = new RegExp(
+  [
+    String.raw`\b(ga|gak|nggak|kah|kan|ya)(\s+(gan|kak|min|pak|bu))?\s*$`,
+    String.raw`\bya\s+bukan\b`,
+    String.raw`\b(berapa|brp|kapan|gimana|bagaimana|apakah|dimana|mana|apa)\b`,
+    String.raw`\b(ga|gak|nggak)\s+(yg|yang|sih)\b`,
+    String.raw`\b(bisa|boleh|ready|bs)(\s+kan)?\s*$`,
+  ].join("|"),
+  "i"
+);
+/** "masih ada", "bisa …": a question when the clause has no full stop, a statement when it has one. */
+const OPENS = /^\s*((gan|kak|min|pak|bu)\s*,?\s*)?(ada|ad|bisa|boleh|msh|masih)\b/i;
+
+/** Whether the line holds a question it does not mark with "?". */
+function asksUnmarked(line: string): boolean {
+  return (line.match(/[^.!?,\n]+[.!?,\n]?/g) ?? []).some((clause) => {
+    const end = clause.trimEnd().slice(-1);
+    if (end === "?") return false;
+    const body = clause.replace(/[.!?,\n]\s*$/, "");
+    return ASKS.test(body) || (OPENS.test(body) && end !== "." && end !== "!");
+  });
+}
+/** Greetings name a time of day; a gloss must not move it. */
+const GREETING: [RegExp, RegExp][] = [
+  [/\bselamat pagi\b/i, /\b(evening|night|afternoon)\b/i],
+  [/\bselamat siang\b/i, /\b(evening|night|morning)\b/i],
+  [/\bselamat (sore|malam)\b/i, /\bmorning\b/i],
+];
 
 function indonesianLeft(gloss: string): string | null {
   return (STRICT.exec(gloss) ?? LOWER.exec(gloss) ?? NYA.exec(gloss))?.[0] ?? null;
@@ -151,6 +193,21 @@ export function problems(line: string, gloss: string | null, keep: string[]): st
   if (breaks(line) !== breaks(gloss)) found.push(`the gloss has ${breaks(gloss)} line breaks, the line ${breaks(line)}`);
   for (const [day, english, name] of DAYS) if (day.test(line) && !english.test(gloss)) found.push(`${name} is missing`);
   if (NEGATION.test(line) && !NOT.test(gloss)) found.push("the line says not (belum, bukan, tidak…) and the gloss does not");
+  const asked = (line.match(/\?/g) ?? []).length;
+  const asks = (gloss.match(/\?/g) ?? []).length;
+  if (asks < asked) found.push("the line asks a question the gloss does not");
+  if (asks > asked && !asksUnmarked(line)) found.push("the gloss asks a question the line does not");
+  if (BUY.test(line) && !/\b(buy|bought|buying|purchase|for sale|sell|selling)\b/i.test(gloss)) found.push("the line is about buying and the gloss is not");
+  if (RENT.test(line) && !/\b(rent|rental|rented|renting|lease)\b/i.test(gloss)) found.push("the line is about renting and the gloss is not");
+  // "beli … bukan sewa" (buy, not rent) must not come out the other way round
+  if (/\bbeli\b[^.?!]*\bbukan\s+sewa\b/i.test(line) && !/\b(buy|buying|purchase)\b[^.?!]*\bnot\b[^.?!]*\b(rent|renting|rental)\b/i.test(gloss)) {
+    found.push("the line says buy, not rent, and the gloss does not");
+  }
+  if (/\bsewa\b[^.?!]*\bbukan\s+beli\b/i.test(line) && !/\b(rent|renting|rental)\b[^.?!]*\bnot\b[^.?!]*\b(buy|buying|purchase)\b/i.test(gloss)) {
+    found.push("the line says rent, not buy, and the gloss does not");
+  }
+  for (const [greeting, wrong] of GREETING) if (greeting.test(line) && wrong.test(gloss)) found.push("the greeting moved to another time of day");
+  if (/\d\s?M\b/.test(line) && /\d\s?M\b/.test(gloss)) found.push("1.5M in these chats is 1.5 billion rupiah: write billion");
   const shape = jsonProblem(line, gloss);
   if (shape) found.push(shape);
   const [low, high] = line.length >= 80 ? [0.65, 2.0] : [0.4, 2.5];

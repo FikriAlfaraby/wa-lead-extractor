@@ -50,10 +50,11 @@ export function sourceLabel(source: string): string {
 
 export function formatBudgetIDR(value: number | null): string {
   if (value === null) return "∅";
-  if (value % 1_000_000_000 === 0) return `Rp ${value / 1_000_000_000}B`;
-  if (value >= 1_000_000_000) return `Rp ${(value / 1_000_000_000).toFixed(1)}B`;
-  if (value % 1_000_000 === 0) return `Rp ${value / 1_000_000}jt`;
-  return `Rp ${value.toLocaleString("id-ID")}`;
+  // spelled out for English readers: "M" would read as a million, "jt" not at all
+  if (value % 1_000_000_000 === 0) return `Rp ${value / 1_000_000_000} billion`;
+  if (value >= 1_000_000_000) return `Rp ${(value / 1_000_000_000).toFixed(1)} billion`;
+  if (value % 1_000_000 === 0) return `Rp ${value / 1_000_000} million`;
+  return `Rp ${value.toLocaleString("en-US")}`;
 }
 
 export function formatProfileSummary(profile: LeadProfile): string {

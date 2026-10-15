@@ -395,13 +395,21 @@ setup instructions and exit 1 rather than failing with a stack trace.
 ## Data & test notes
 
 - `data/glosses-en.json`: an English line for every Indonesian line that
-  [fikrialfaraby.com/wa-lead](https://fikrialfaraby.com/wa-lead/) shows: the 12 chats, the answer
-  key's words, the simulator's chats, each fact a model pulled out with the lead's quoted words, and
-  each drafted follow-up. GPT-6 Luna wrote the English (`eval/gloss.ts`), and
-  `test/glosses.test.ts` checks it. The check finds Indonesian left in the English, and a number
-  that changed with its unit (here "1.5M" is 1.5 billion rupiah). It also finds a missing name or
-  weekday, and a dropped "not". The lines a finding rests on are pinned by hand. The pipeline never
-  reads this file.
+  [fikrialfaraby.com/wa-lead](https://fikrialfaraby.com/wa-lead/) shows. That covers the 12 chats, the
+  answer key's words, the simulator's chats, each fact a model pulled out with the lead's quoted words,
+  and each drafted follow-up. GPT-6 Luna wrote the English (`eval/gloss.ts`), and `test/glosses.test.ts`
+  checks it. The check finds these errors:
+  - Indonesian left in the English;
+  - a number that changed with its unit (here "1.5M" is 1.5 billion rupiah, so the English must say
+    billion);
+  - a missing name or weekday;
+  - a dropped "not";
+  - a statement turned into a question, or the other way round;
+  - buying and renting swapped;
+  - a greeting moved to another time of day.
+
+  It cannot catch every change of meaning, so the lines a finding rests on are pinned by hand. The
+  pipeline never reads this file.
 - `data/conversations.json` / `eval/golden.json`: 12 hand-labeled
   conversations — 8 normal, 2 sparse (nothing extractable — the system must
   not invent facts just to fill the profile), 2 adversarial (agent-stated

@@ -46,6 +46,20 @@ describe("the English glosses", () => {
     expect(english("weekend ini bisa, tp ga buru2 juga sih nyarinya, masih compare2")).toMatch(/this weekend.*not in a hurry/);
   });
 
+  it("keep the agent's answers answers, and the lead's intent the right way round", () => {
+    // the agent says the house is still available; it does not ask
+    const available = english("Halo kak, masih ada. Mau saya kirim info lengkapnya?");
+    expect(available.split("?")[0]).toMatch(/still available/);
+    expect((available.match(/\?/g) ?? []).length).toBe(1);
+    for (const line of Object.keys(glosses).filter((l) => /\bbeli\b[^.?!]*\bbukan\s+sewa\b/.test(l))) {
+      expect(english(line), line).toMatch(/\b(buy|buying|purchase)\b[^.?!]*\bnot\b[^.?!]*\b(rent|renting|rental)\b/);
+    }
+    // the friend's-budget chat ends when the lead stops looking: the English must say so
+    expect(english("eh btw gak jadi deh gan, gak minat ah nyari-nyari lagi sekarang")).toMatch(/not (interested|looking)|no longer/);
+    // a quote that is only "1.5M" reads as billions, never as a million
+    expect(english("1.5M")).toMatch(/1\.5 billion/);
+  });
+
   it("give every Indonesian draft its budget in billions", () => {
     const drafts = Object.keys(glosses).filter((line) => /miliar/.test(line));
     expect(drafts.length).toBeGreaterThan(0);
@@ -70,6 +84,12 @@ describe("the gloss checks", () => {
     ["ok nanti saya liat2 dulu", "OK, I'll look2 first.", "a repeated word written with 2"],
     ["halo kak, iya masih ada beberapa unit", null, "the line is Indonesian but has no gloss"],
     ["Hi, saw your listing for a condo in Singapore", "Hi, saw your listing for a condo in Singapore.", "it needs no gloss"],
+    // the review's cases: a statement turned into a question, a swapped intent, a lost "not", a moved greeting
+    ["Halo kak, masih ada. Mau saya kirim info lengkapnya?", "Hi, is it still available? Shall I send the details?", "asks a question the line does not"],
+    ["saya mau beli ya bukan sewa", "I want to rent, not buy.", "buy, not rent"],
+    ["gak minat ah nyari-nyari lagi", "I'm interested in looking again.", "the gloss does not"],
+    ["Selamat siang, ada yang bisa dibantu?", "Good evening, how can I help?", "another time of day"],
+    ["budget 1.5M", "Budget 1.5M.", "write billion"],
   ];
   for (const [line, gloss, problem] of wrong) {
     it(`catch: ${problem}`, () => {
@@ -84,6 +104,9 @@ describe("the gloss checks", () => {
     ["gan ada yg dket stasiun ga", "Any places near the station?"],
     ["BSD sama Alam Sutera dua2nya lagi dipertimbangin", "Both BSD and Alam Sutera are being considered."],
     ["Hi Dan, is the unit still available?", null],
+    ["masih available ga?", "Is it still available?"],
+    ["per bulan aja, 20jt masih bs kan", "Per month, 20 million still works, right?"],
+    ["budget 1.5M", "Budget of 1.5 billion rupiah."],
   ];
   for (const [line, gloss] of right) {
     it(`pass: ${gloss}`, () => expect(problems(line, gloss, keep)).toEqual([]));

@@ -103,6 +103,14 @@ export function FactsPane({ sim, onFactClick, notes = [], writer = null }: Facts
           {FACT_FIELDS.map(({ key, label }) => {
             const { text, isNull } = factValueDisplay(sim.profile, key);
             const citation = isNull ? null : primaryCitation(sim.citations, key);
+            // areas are glossed one by one: a model may keep a word around a name ("deket De Park")
+            const gloss = isNull
+              ? null
+              : key === "areas"
+                ? sim.profile.areas.some((a) => english(a))
+                  ? sim.profile.areas.map((a) => english(a) ?? a).join(", ")
+                  : null
+                : english(text);
             return (
               <div key={key} className="fact-row">
                 <dt>{label}</dt>
@@ -115,13 +123,14 @@ export function FactsPane({ sim, onFactClick, notes = [], writer = null }: Facts
                     className={`fact-value ${isNull ? "fact-value--null" : "fact-value--flash"}`}
                     disabled={citation === null}
                     onClick={() => onFactClick(citation)}
-                    aria-label={citation ? `${label}: ${text}. Show the message it comes from` : `${label}: none`}
+                    lang={gloss ? "id" : undefined}
+                    aria-label={citation ? `${label}: ${text}${gloss ? ` (${gloss})` : ""}. Show the message it comes from` : `${label}: none`}
                   >
                     {text}
                   </button>
-                  {english(isNull ? null : text) && (
+                  {gloss && (
                     <span className="mt-gloss" lang="en">
-                      {english(text)}
+                      {gloss}
                     </span>
                   )}
                   {citation && (
