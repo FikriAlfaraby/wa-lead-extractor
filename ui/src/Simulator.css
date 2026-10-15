@@ -444,3 +444,15 @@
   color: var(--text);
   font-size: 13px;
 }
+
+/* An English line under an Indonesian one, as on the rest of fikrialfaraby.com (.mt-gloss there):
+   the original first, the translation in grey under it. */
+.mt-gloss {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  font-style: normal;
+  color: var(--text-muted);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}

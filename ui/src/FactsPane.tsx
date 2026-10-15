@@ -8,6 +8,7 @@ import {
   fieldLabel,
   formatBudgetIDR,
 } from "./labels";
+import { english } from "./glosses";
 
 type FactKey = keyof FactCitations;
 
@@ -57,7 +58,14 @@ function DraftSection({ draft, writer }: { draft: DraftState; writer: string | n
   }
   return (
     <>
-      <blockquote className="lead-card__draft">{draft.output.message}</blockquote>
+      <blockquote className="lead-card__draft" lang={english(draft.output.message) ? "id" : undefined}>
+        {draft.output.message}
+        {english(draft.output.message) && (
+          <span className="mt-gloss" lang="en">
+            {english(draft.output.message)}
+          </span>
+        )}
+      </blockquote>
       {writer && <p className="draft-writer">Written by {writer}.</p>}
       {draft.verdict.passed ? (
         <span className="guardrail guardrail--pass">Passed: its numbers and areas are ones the lead gave, and it fits the agent's style.</span>
@@ -111,7 +119,21 @@ export function FactsPane({ sim, onFactClick, notes = [], writer = null }: Facts
                   >
                     {text}
                   </button>
-                  {citation && <q className="fact-quote">{citation}</q>}
+                  {english(isNull ? null : text) && (
+                    <span className="mt-gloss" lang="en">
+                      {english(text)}
+                    </span>
+                  )}
+                  {citation && (
+                    <q className="fact-quote" lang={english(citation) ? "id" : undefined}>
+                      {citation}
+                    </q>
+                  )}
+                  {english(citation) && (
+                    <span className="mt-gloss" lang="en">
+                      {english(citation)}
+                    </span>
+                  )}
                 </dd>
               </div>
             );

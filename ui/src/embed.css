@@ -455,3 +455,15 @@
     transform: none;
   }
 }
+
+/* An English line under an Indonesian one: the page's .mt-gloss, with the page's own tokens. The
+   original comes first, the translation in grey under it. */
+.mt-gloss {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  font-style: normal;
+  color: var(--muted);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}

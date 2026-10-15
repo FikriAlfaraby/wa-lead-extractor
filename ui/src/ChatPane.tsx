@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { Message } from "@pipeline/schema";
+import { english } from "./glosses";
 
 interface ChatPaneProps {
   leadName: string;
@@ -41,7 +42,12 @@ export function ChatPane({ leadName, baseTime, messages, typingSpeaker, highligh
               highlightedIndex === i ? "chat-bubble--highlight" : ""
             }`}
           >
-            <p>{message.text}</p>
+            <p lang={english(message.text) ? "id" : undefined}>{message.text}</p>
+            {english(message.text) && (
+              <span className="mt-gloss" lang="en">
+                {english(message.text)}
+              </span>
+            )}
             <span className="chat-bubble__time">{formatTimestamp(baseTime, i)}</span>
           </div>
         ))}

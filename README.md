@@ -150,7 +150,7 @@ said, by the lead, in this transcript: every non-null LLM field must carry
 a verbatim citation, re-checked (case/whitespace-normalized) against the
 real messages, and rejected if it's missing, fabricated, or — the
 "agent-voice trap" — sourced from the *agent's* message instead of the
-lead's (an agent floats "budget di kisaran 1.5M ya kak" and the lead never
+lead's (an agent floats "budget di kisaran 1.5M ya kak", a budget of about 1.5 billion rupiah, and the lead never
 confirms it; a naive extractor happily reports it as the lead's budget
 anyway). The failure mode here is **inventing what the lead said.**
 
@@ -210,14 +210,14 @@ scorer. The review found three kinds of trouble:
 - **My code, now fixed.** The rule-based stage read "temen gue kmrn baru beli rumah" (my friend
   just bought a house) as the lead's intent to buy; it now drops clauses about a friend or a
   relative. The quote check threw out a true area when one quote named two ("BSD sama Alam
-  Sutera"); an area named in another of the lead's area quotes is now kept. The "after" column is
+  Sutera", BSD and Alam Sutera); an area named in another of the lead's area quotes is now kept. The "after" column is
   the same replies run through the fixed code: no model output was re-rolled.
-- **The scorer.** Exact comparison counts "rumah tinggal" against "rumah" as invented. The word rule
+- **The scorer.** Exact comparison counts "rumah tinggal" (a house to live in) against "rumah" (a house) as invented. The word rule
   (`valuesMatch` in `eval/score.ts`) matches free text when every word of the shorter value is in
   the longer: "BSD City" matches "BSD", but a translation ("studio apartment") or an extra place
-  ("deket De Park") still counts as wrong. Budget, intent and urgency stay exact.
+  ("deket De Park", near De Park) still counts as wrong. Budget, intent and urgency stay exact.
 - **What is left.** Under the word rule: Luna took a viewing day for a moving date (c05, "weekend
-  ini bisa"), which is really wrong; the rest are translations, an extra place the lead did name,
+  ini bisa", this weekend works), which is really wrong; the rest are translations, an extra place the lead did name,
   and labels in the answer key that are themselves debatable (urgency for "still just looking").
 
 The simulator also turned up three defects, fixed the same day: a Singapore "1.5M" (S$1.5 million)
@@ -394,6 +394,14 @@ setup instructions and exit 1 rather than failing with a stack trace.
 
 ## Data & test notes
 
+- `data/glosses-en.json`: an English line for every Indonesian line that
+  [fikrialfaraby.com/wa-lead](https://fikrialfaraby.com/wa-lead/) shows: the 12 chats, the answer
+  key's words, the simulator's chats, each fact a model pulled out with the lead's quoted words, and
+  each drafted follow-up. GPT-6 Luna wrote the English (`eval/gloss.ts`), and
+  `test/glosses.test.ts` checks it. The check finds Indonesian left in the English, and a number
+  that changed with its unit (here "1.5M" is 1.5 billion rupiah). It also finds a missing name or
+  weekday, and a dropped "not". The lines a finding rests on are pinned by hand. The pipeline never
+  reads this file.
 - `data/conversations.json` / `eval/golden.json`: 12 hand-labeled
   conversations — 8 normal, 2 sparse (nothing extractable — the system must
   not invent facts just to fill the profile), 2 adversarial (agent-stated
