@@ -36,9 +36,10 @@ const STRICT = new RegExp(`\\b(${WORDS.filter((w) => !AMBIGUOUS.has(w)).join("|"
 const LOWER = new RegExp(`\\b(${[...AMBIGUOUS].join("|")})\\b`);
 /** warnanya, budgetnya: the -nya forms the list cannot hold one by one (not Kenya, not Tanya). */
 const NYA = /\b[a-z]{3,}nya\b/i;
-/** Indonesian words that are also English ("jam", "sore", "survey"): they make a line Indonesian, but an
- * English gloss may use them. Months spelt the same in both (April, September, November) count for neither. */
-const DETECT_ONLY = /\b(jam|sore)\b/i;
+/** Indonesian words that are also English ("jam", "sore") or a place's nickname (Jaksel, South Jakarta):
+ * they make a line Indonesian, but an English gloss may keep them. Months spelt the same in both (April,
+ * September, November) count for neither. */
+const DETECT_ONLY = /\b(jam|sore|jaksel)\b/i;
 /** A number with the unit that scales it. In these chats "1.5M" is 1.5 miliar: billions of rupiah. */
 const AMOUNT = /(?<![\d.,:])(\d+(?:[.,:]\d+)*)(?:\s?(rb|ribu|k|jt|juta|thousand|million|miliar|milyar|billion|bn|m)\b)?/gi;
 const ZEROS: Record<string, number> = {
@@ -181,9 +182,10 @@ export function shownLines(shown: Shown): string[] {
   for (const c of shown.conversations) for (const m of c.messages) add(m.text);
   for (const r of shown.results) {
     for (const c of r.perConversation) {
-      for (const field of WORDY) {
-        add(c.expected[field]);
-        add(c.predicted[field]);
+      for (const side of [c.expected, c.predicted]) {
+        for (const field of WORDY) add(side[field]);
+        // areas are mostly names, but a model may keep a word around one ("deket De Park")
+        for (const area of Array.isArray(side.areas) ? side.areas : []) add(area);
       }
     }
   }

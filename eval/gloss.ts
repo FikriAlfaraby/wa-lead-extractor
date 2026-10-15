@@ -67,7 +67,10 @@ export function loadShown(): Shown {
     conversations: read("data/conversations.json"),
     scenarios: read("data/scenarios.json"),
     recordings: read<{ scenarios: Shown["recordings"] }>("eval/recordings/2026-10-14-scenarios.json").scenarios,
-    results: ["gpt-6-luna", "gemini-3.8-flash"].map((m) => read(`eval/results/2026-10-14-${m}.json`)),
+    // the page's review table shows each model's answers before the fixes; its summary, after
+    results: ["", "before-fixes/"].flatMap((dir) =>
+      ["gpt-6-luna", "gemini-3.8-flash"].map((m) => read<Shown["results"][number]>(`eval/results/${dir}2026-10-14-${m}.json`))
+    ),
     agents: read("data/agents.json"),
   };
 }
