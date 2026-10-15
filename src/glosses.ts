@@ -168,6 +168,8 @@ export interface Shown {
   /** each model's per-chat answers and the answer key */
   results: { perConversation: { predicted: Record<string, unknown>; expected: Record<string, unknown> }[] }[];
   agents: { name: string }[];
+  /** what the simulator shows at every step (eval/gloss.ts replays every chat to read it) */
+  simulated: string[];
 }
 
 /** The free-text facts a reader sees in Indonesian: the property type and the timeline. */
@@ -203,6 +205,7 @@ export function shownLines(shown: Shown): string[] {
       add((run.draft as { output?: { message?: unknown } } | undefined)?.output?.message);
     }
   }
+  shown.simulated.forEach(add);
   return [...seen];
 }
 

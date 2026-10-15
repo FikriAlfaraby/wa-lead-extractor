@@ -15,6 +15,9 @@ import { fileURLToPath } from "node:url";
 
 import { names, problems, shownLines, type Shown } from "../src/glosses.js";
 import { callLlmJson, loadLlmConfigFromEnv } from "../src/llm.js";
+import { outputsFor, runSimulation, sourcesFor } from "../src/replay.js";
+import { RecordingSchema, ScenarioSchema } from "../src/scenario.js";
+import { AgentProfileSchema } from "../src/schema.js";
 
 const SYSTEM = `You translate lines from WhatsApp chats into English for readers who do not speak Indonesian. The
 chats are between property leads in and around Jakarta and the agents who answer them; some lines are
@@ -62,8 +65,37 @@ interface GlossFile {
   corrected_by_hand: Record<string, string>;
 }
 
+/**
+ * What the simulator shows at every step of every chat, from every source (each model, and the hand-made
+ * answer): the facts, the lead's words quoted under them, and the draft. Read from the same replay the
+ * simulator runs, so a quote the rule-based stage picks is here too.
+ */
+function simulated(): string[] {
+  const scenarios = ScenarioSchema.array().parse(read("data/scenarios.json"));
+  const recording = RecordingSchema.pick({ recordedAt: true, gateway: true, models: true, scenarios: true }).parse(
+    read("eval/recordings/2026-10-14-scenarios.json")
+  );
+  const agents = AgentProfileSchema.array().parse(read("data/agents.json"));
+  const out: string[] = [];
+  for (const scenario of scenarios) {
+    const agent = agents.find((a) => a.id === scenario.agentId);
+    if (!agent) throw new Error(`no agent ${scenario.agentId}`);
+    for (const source of sourcesFor(recording, scenario)) {
+      const outputs = outputsFor(recording, scenario, source);
+      for (let step = 0; step < scenario.steps.length; step++) {
+        const sim = runSimulation(scenario, agent, step, outputs);
+        for (const quote of Object.values(sim.citations).flat()) if (quote) out.push(quote);
+        for (const value of [sim.profile.propertyType, sim.profile.timeline, ...sim.profile.areas]) if (value) out.push(value);
+        if (sim.draft?.status === "written") out.push(sim.draft.output.message);
+      }
+    }
+  }
+  return out;
+}
+
 export function loadShown(): Shown {
   return {
+    simulated: simulated(),
     conversations: read("data/conversations.json"),
     scenarios: read("data/scenarios.json"),
     recordings: read<{ scenarios: Shown["recordings"] }>("eval/recordings/2026-10-14-scenarios.json").scenarios,
