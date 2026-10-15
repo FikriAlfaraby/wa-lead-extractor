@@ -57,14 +57,14 @@
       "conversation": "c04_bsd_rent_house_asap",
       "field": "propertyType",
       "category": "right",
-      "why": "A rented house with three bedrooms, as the lead wrote; the key says “rumah”."
+      "why": "A rented house with three bedrooms, as the lead wrote; the key says “rumah” (a house)."
     },
     {
       "model": "cx/gpt-6-luna",
       "conversation": "c05_jkt_buy_apartment_seller_nego",
       "field": "timeline",
       "category": "wrong",
-      "why": "“Weekend ini bisa” is when the lead can view the unit, not when they will buy."
+      "why": "“Weekend ini bisa” (this weekend works) is when the lead can view the unit, not when they will buy."
     },
     {
       "model": "cx/gpt-6-luna",
@@ -99,7 +99,7 @@
       "conversation": "c11_adversarial_agent_states_budget",
       "field": "propertyType",
       "category": "right",
-      "why": "The lead wrote “2BR”; the key adds “apartemen”."
+      "why": "The lead wrote “2BR”; the key adds “apartemen” (apartment)."
     },
     {
       "model": "cx/gpt-6-luna",
@@ -176,7 +176,7 @@
       "conversation": "c11_adversarial_agent_states_budget",
       "field": "propertyType",
       "category": "right",
-      "why": "The lead wrote “2BR”; the key adds “apartemen”."
+      "why": "The lead wrote “2BR”; the key adds “apartemen” (apartment)."
     },
     {
       "model": "ag/gemini-3.8-flash",
