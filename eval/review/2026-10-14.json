@@ -29,7 +29,7 @@
       "conversation": "c02_jaksel_rent_medium",
       "field": "propertyType",
       "category": "right",
-      "why": "“Apartemen studio”, in English."
+      "why": "“Apartemen studio” (a studio apartment), written in English."
     },
     {
       "model": "cx/gpt-6-luna",
@@ -43,7 +43,7 @@
       "conversation": "c03_sg_buy_condo_lowurgency",
       "field": "timeline",
       "category": "right",
-      "why": "“Tahun depan”, in English."
+      "why": "“Tahun depan” (next year), written in English."
     },
     {
       "model": "cx/gpt-6-luna",
