@@ -18,7 +18,7 @@ import { EMPTY_LEAD_PROFILE, type Conversation, type LeadProfile, type LlmExtrac
 export const FIELDS = ["budgetIDR", "areas", "intent", "urgency", "propertyType", "timeline"] as const;
 export type Field = (typeof FIELDS)[number];
 
-function isEmptyValue(field: Field, value: unknown): boolean {
+export function isEmptyValue(field: Field, value: unknown): boolean {
   if (field === "areas") return Array.isArray(value) && value.length === 0;
   if (field === "intent" || field === "urgency") return value === "unknown";
   return value === null;
