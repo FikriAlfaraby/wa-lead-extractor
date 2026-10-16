@@ -220,6 +220,15 @@ scorer. The review found three kinds of trouble:
   ini bisa", this weekend works), which is really wrong; the rest are translations, an extra place the lead did name,
   and labels in the answer key that are themselves debatable (urgency for "still just looking").
 
+**A second rater.** "Really wrong" was one reader's call, so a second rater labelled the same 20 judgment
+calls blind: a separate AI agent (Claude, in a fresh session) given only the written rules, the 20 facts
+without model names or my labels, and the conversations under neutral names. It agreed with mine on 18 of
+20, Cohen's kappa 0.75, and it too found exactly one wrong: the same viewing day taken for a moving date.
+Both disagreements are the lead's "masih blm pasti" (still not certain) kept as a timeline: I called the
+answer key's empty value debatable, it called the extraction right. The rules and my predictions were
+tagged before it labelled anything (`second-rater-prereg`; all 5 held); its labels, reasons and the
+comparison are in `eval/second-rater/`.
+
 The simulator also turned up three defects, fixed the same day: a Singapore "1.5M" (S$1.5 million)
 was read as IDR 1.5 billion and repeated in the drafts (conversations now carry a market, and
 outside Indonesia only rupiah said as rupiah is read); the draft check held back "a quick

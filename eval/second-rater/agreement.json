@@ -1,0 +1,58 @@
+{
+ "items": 20,
+ "agree": 18,
+ "kappa": 0.75,
+ "mine": {
+  "right": 14,
+  "debatable": 5,
+  "wrong": 1
+ },
+ "theirs": {
+  "right": 16,
+  "debatable": 3,
+  "wrong": 1
+ },
+ "matrix": {
+  "right": {
+   "right": 14,
+   "debatable": 0,
+   "wrong": 0
+  },
+  "debatable": {
+   "right": 2,
+   "debatable": 3,
+   "wrong": 0
+  },
+  "wrong": {
+   "right": 0,
+   "debatable": 0,
+   "wrong": 1
+  }
+ },
+ "disagreements": [
+  {
+   "id": "i04",
+   "model": "cx/gpt-6-luna",
+   "conversation": "c02_jaksel_rent_medium",
+   "field": "timeline",
+   "extracted": "Belum pasti",
+   "answerKey": null,
+   "mine": "debatable",
+   "mineWhy": "The lead said the moving date is not decided yet (“masih blm pasti”). The key leaves the field empty; the model fills it with that. Nothing false either way.",
+   "theirs": "right",
+   "theirWhy": "The lead says \"kapan mau pindah masih blm pasti, liat2 dulu aja\" (when I'll move is still not certain, I'm just looking around first), so \"Belum pasti\" records the lead's own answer about timing and adds no date the lead did not give."
+  },
+  {
+   "id": "i15",
+   "model": "ag/gemini-3.8-flash",
+   "conversation": "c02_jaksel_rent_medium",
+   "field": "timeline",
+   "extracted": "masih blm pasti",
+   "answerKey": null,
+   "mine": "debatable",
+   "mineWhy": "The lead said the moving date is not decided yet (“masih blm pasti”). The key leaves the field empty; the model fills it with that. Nothing false either way.",
+   "theirs": "right",
+   "theirWhy": "The lead's own words are \"kapan mau pindah masih blm pasti\" (when I'll move is still not certain), so the extracted value repeats the lead's answer about timing verbatim and invents no date."
+  }
+ ]
+}
